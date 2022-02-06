@@ -4,20 +4,8 @@
         locklname varchar(30),
         primary key(lockID));
 
-
-CREATE TABLE CUSTOMER (
-        custID char(9) NOT NULL,
-        caddress varchar(100),
-        custfname varchar(30),
-        custlname varchar(30),
-        phone char(10),
-        email varchar(50),
-        primary key(custID));
-
-
 CREATE TABLE JOB (
         jobID char(9) NOT NULL,
-        custID char(9),
         lockID char(3),
         jobdate date,
         numkeys int,
@@ -25,18 +13,14 @@ CREATE TABLE JOB (
         cost dec(7,2),
         address varchar(100),
         locksmithnotes varchar(100),
-        customernotes varchar(100),
         primary key(jobID),
-        foreign key(custID) references CUSTOMER(custID),
         foreign key(lockID) references LOCKSMITH(lockID));
-
 
 CREATE TABLE KEYLOCK (
         jobID char(9) NOT NULL,
-        location varchar(100),
+        unit varchar(100),
         keyway char(3),
         combination char(5),
-        keynotes varchar(100);
         primary key(jobID),
         foreign key(jobID) references JOB(jobID));
 
@@ -48,14 +32,8 @@ CREATE TABLE KEYLOCK (
 INSERT INTO LOCKSMITH
 VALUES (000, 'Blaize', 'Bywater');
 
-
-INSERT INTO CUSTOMER
-VALUES (123, '1234 random blvd', 'John', 'Doe', 9161234567, 'johndoe@gmail.com');
-
-
 INSERT INTO JOB
-VALUES (9876, 123, 000, '2021-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog', 'only available on weekends');
-
+VALUES (9876, 000, '2021-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
 
 INSERT INTO KEYLOCK
-VALUES (9876, 'Sac State Dorm 191', 'KW1', '01010', 'no notes needed');
+VALUES (9876, 'Sac State Dorm 191', 'KW1', '01010');
