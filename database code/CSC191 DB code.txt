@@ -33,12 +33,11 @@ CREATE TABLE JOB (
 
 CREATE TABLE KEYLOCK (
         jobID char(9) NOT NULL,
-        keynum int NOT NULL,
         location varchar(100),
         keyway char(3),
         combination char(5),
         keynotes varchar(100);
-        primary key(jobID, keynum),
+        primary key(jobID),
         foreign key(jobID) references JOB(jobID));
 
 
@@ -55,8 +54,8 @@ VALUES (123, '1234 random blvd', 'John', 'Doe', 9161234567, 'johndoe@gmail.com')
 
 
 INSERT INTO JOB
-VALUES (9876, 123, 000, '2021-12-01', 3, 3, 500.00, '1234 random blvd', 'beware of dog', 'only available on weekends');
+VALUES (9876, 123, 000, '2021-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog', 'only available on weekends');
 
 
 INSERT INTO KEYLOCK
-VALUES (9876, 1, 'Sac State Dorm 191', 'KW1', '01010', 'no notes needed');
+VALUES (9876, 'Sac State Dorm 191', 'KW1', '01010', 'no notes needed');
