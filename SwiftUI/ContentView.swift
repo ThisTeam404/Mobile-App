@@ -8,6 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State var flag = false
+    var body: some View {
+        NavigationView{
+        VStack{
+            NavigationLink(destination: Part2(), label: {Text("Click here for Add Lock")})
+                
+            Part1()
+                .navigationTitle("Create Job")
+                .navigationBarTitleDisplayMode(.inline)
+        }
+        }
+    }
+}
+                    
+
+
+struct Part1: View {
+    @State var flag = false
     @State var numberOfLocks: String = ""
     @State var isOn = false
     @State var confirmFlag: Bool = false
@@ -15,18 +33,6 @@ struct ContentView: View {
     var body: some View {
         ZStack{
             VStack{
-                Text("LockThatDown").padding()
-                HStack{
-                    Spacer()
-                    Button("Add Lock",action: {
-                    print("Hello World")
-                    })
-                    Spacer()
-                    Button("Create Job", action: {
-                        print("Luigi")
-                    })
-                    Spacer()
-                }
                 HStack{
                     Text("Keyware Type").padding()
                     Spacer()
@@ -70,9 +76,25 @@ struct ContentView: View {
                     }).alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete your job information?"), primaryButton: .default(Text("Yes"), action: {print("Cancel test")}), secondaryButton: .cancel(Text("No")))}
                     Spacer()
                 }
+                
+                
+                
             }
-            
         }
+    }
+}
+
+
+struct Part2: View{
+    var flag = false
+    var body: some View {
+        ZStack{
+            VStack{
+                Text("Test words")
+                .navigationTitle(Text("Add Lock"))
+            }
+        }
+
     }
 }
 
