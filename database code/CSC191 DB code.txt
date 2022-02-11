@@ -35,4 +35,4 @@ INSERT INTO JOB
 VALUES (9876, 000, '2021-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
 
 INSERT INTO KEYLOCK
-VALUES (1, 9876, 'Sac State Dorm 191', 'KW1', '01010');
+VALUES (001, 9876, 'Sac State Dorm 191', 'KW1', '01010');
