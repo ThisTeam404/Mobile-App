@@ -25,7 +25,14 @@ CREATE TABLE KEYLOCK (
         primary key(keyID, jobID),
         foreign key(jobID) references JOB(jobID));
 
+CREATE ROLE 'owner', 'employee';
 
+GRANT INSERT ON JOB.* TO 'employee'; 
+GRANT INSERT ON KEYLOCK.* TO 'employee'; 
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON LOCKSMITH.* TO 'owner'; 
+GRANT SELECT, INSERT, UPDATE, DELETE ON JOB.* TO 'owner'; 
+GRANT SELECT, INSERT, UPDATE, DELETE ON KEYLOCK.* TO 'owner';
 
 
 INSERT INTO LOCKSMITH
