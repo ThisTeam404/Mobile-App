@@ -17,7 +17,7 @@ struct ContentView: View {
 
             }
             else if signInSuccess && changeView{
-                createLockView(changeView:$changeView)
+                AddLockView(changeView:$changeView)
             }
             else if !signInSuccess{
                 LoginFormView(signInSuccess: $signInSuccess)
