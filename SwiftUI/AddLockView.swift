@@ -67,9 +67,7 @@ struct AddLockView: View {
                         }
                     }
                 }
-                
-                
-                
+                Spacer()
             }
         }
     }
