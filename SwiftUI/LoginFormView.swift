@@ -42,7 +42,7 @@ struct LoginFormView: View {
                 
                 
                 Text(" Password")
-                TextField("type here", text: $password).textContentType(.password)
+                SecureField("type here", text: $password).textContentType(.password)
                     .padding(.all)
                     .frame(width: 200.0, height: 50.0)
                     .border(Color.blue)
