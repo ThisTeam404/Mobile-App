@@ -7,68 +7,122 @@
 
 import SwiftUI
 
-struct AddLockView: View {
+struct Lock: Identifiable{
+    var id = UUID()
+    let jobTitle: String
+    let jobDate: String
+    let bitting: String
+    let comment: String
+    //let address: String
+    //let cost: String
+    //let keyWay:String
+}
+class LocksViewModel: ObservableObject{
+    @Published var locks: [Lock] = [
+        Lock(jobTitle: "Job Name", jobDate: "Job Date", bitting: "Key Bitting", comment: "Comments"
+             //, address: "Address", cost: "Cost", keyWay: "Keyway Type"
+            )
+            ]
+}
+
+struct AddLockView: View{
+    @StateObject var viewModel = LocksViewModel()
+    
     @Binding var changeView:Bool
     
-    @State var lockPins: String = ""
-    @State var isOn = false
-    @State var jobDate: String = ""
-    @State var jobName: String = ""
+    @State var textName = ""
+    @State var textDate = ""
+    @State var textBitting = ""
+    @State var textComment = ""
+    //@State var textCost = ""
+    //@State var textAddress = ""
+    //@State var textKeyway = ""
+    
     var body: some View {
-        ZStack{
-            VStack{
-                Text("LockThatDown")
-                HStack{
-                    Spacer()
-                    Button(action: {self.changeView = true}) {
-                        Text("Add Page")
-                    }
-                    Spacer()
-                    Button(action:{ self.changeView=false}) {
-                        Text("Create Job")
-                    }
-                    Spacer()
+        VStack{
+            Text("LockThatDown").bold().foregroundColor(Color.cyan)
+            HStack{
+                Spacer()
+                Button(action: {self.changeView = true}) {
+                    Text("Add Key").underline().foregroundColor(Color.gray)
                 }
-                HStack{
-                    Text("Keyway Type").padding()
-                    Spacer()
-                    Button("Schlage", action:{ print("Schlage")})
-                    Button("Kwikset", action:{ print("Kwikset")})
-                    Spacer()
-                }
-                Text("Lock Combo:")
-                TextField("Combo: ", text: $lockPins)
-                HStack{
-                    Spacer()
-                    Button("Confirm",action: {
-                    print("Combo Added")
-                    })
-                    Spacer()
-                }
-                Toggle(isOn: $isOn) {
-                    Text("Additional Info?")
-                    if(isOn)
-                    {
-                        VStack{
-                            HStack{
-                                Spacer()
-                                Text("Job Name:")
-                                Spacer()
-                                TextField("Name ", text: $jobName)
-                                Spacer()
-                            }
-                            HStack{
-                                Spacer()
-                                Text("Job Date:")
-                                Spacer()
-                                TextField("Date ", text: $jobDate)
-                                Spacer()
-                            }
-                        }
-                    }
+                Spacer()
+                Button(action:{ self.changeView=false}) {
+                    Text("Create Job").foregroundColor(Color.gray)
                 }
                 Spacer()
             }
+            NavigationView{
+                VStack(alignment: .center){
+                    Section(header: Text("Add New Key").bold()){
+                        TextField("Name ", text: $textName)
+                            .padding()
+                        TextField("Date ", text: $textDate)
+                            .padding()
+                        TextField("Bitting ", text: $textBitting)
+                            .padding()
+                        TextField("Comment ", text: $textComment)
+                            .padding()
+                        Button(action: {
+                            self.addToList()
+                        }, label: {
+                            Text("Add")
+                                .bold()
+                                .frame(width: 250, height: 50, alignment: .center)
+                                .background(Color.cyan)
+                                .cornerRadius(8)
+                                .foregroundColor(Color.black)
+                        })
+                    }
+                    List{
+                        ForEach(viewModel.locks){ lock in
+                            LockRow(jobTitle: lock.jobTitle,
+                                    jobDate: lock.jobDate,
+                                    comment: lock.comment,
+                                    bitting: lock.bitting)
+                        }
+                    }
+                }.navigationBarTitle("")
+                 .navigationBarHidden(true)
+            }
+        }
+    }
+    func addToList(){
+        guard !textName.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        guard !textBitting.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        guard !textDate.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        guard !textComment.trimmingCharacters(in: .whitespaces).isEmpty else {
+            return
+        }
+        
+        let newLock = Lock(jobTitle: textName, jobDate: textDate, bitting: textBitting, comment: textComment)
+        viewModel.locks.append(newLock)
+        
+        textDate=""
+        textBitting=""
+        textComment=""
+        textName=""
+    }
+}
+
+struct LockRow: View{
+    let jobTitle: String
+    let jobDate: String
+    let comment: String
+    let bitting: String
+    
+    var body: some View{
+        HStack{
+            Text(jobTitle)
+            Text(jobDate)
+            Text(comment)
+            Text(bitting)
         }
     }
 }
