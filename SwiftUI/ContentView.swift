@@ -1,26 +1,23 @@
 //
 //  ContentView.swift
-//  LockThatDown
+//  GoogleLoginOption
 //
-//  Created by Milford Gover on 2/12/22.
+//  Created by Estepa, Kaily on 2/15/22.
 //
 
 import SwiftUI
 
 struct ContentView: View {
-    @State var signInSuccess = false
-    @State var changeView = false
+    
+    @EnvironmentObject var loginVM: LoginViewModel
+    
     var body: some View {
         return Group{
-            if signInSuccess && !changeView {
-                createJob(changeView:$changeView)
-
+            if(loginVM.successfulLogin){
+                MenuView()
             }
-            else if signInSuccess && changeView{
-                AddLockView(changeView:$changeView)
-            }
-            else if !signInSuccess{
-                LoginFormView(signInSuccess: $signInSuccess)
+            else{
+                LoginView()
             }
         }
     }
@@ -28,10 +25,9 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ContentView()
-                .previewDevice("iPhone 11 Pro")
-                .previewInterfaceOrientation(.portrait)
-        }
+           Group{
+               ContentView()
+               
+           }
     }
 }
