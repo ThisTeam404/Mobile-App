@@ -7,14 +7,23 @@
 
 import SwiftUI
 
+struct numCombo: Identifiable{
+    var id = UUID()
+    @State var numberCombo: String = ""
+}
+class numComboViewModel: ObservableObject{
+    @Published var numCombos: [numCombo] = []
+}
 struct createJob: View {
     @Binding var changeView:Bool
     
     @State var flag = false
-    @State var numberOfLocks: String = ""
+    @State var numberOfLocksCombos: String = ""
     @State var isOn = false
     @State var confirmFlag: Bool = false
     @State var cancelFlag: Bool = false
+    
+    @ObservedObject var viewModel = numComboViewModel()
     var body: some View {
         ZStack{
             VStack{
@@ -25,41 +34,34 @@ struct createJob: View {
                         Text("Add Page")
                     }
                     Spacer()
-                    Button("Create Job", action:{ print("One two")})
+                    Button("Create Job", action:{ })
                     Spacer()
                 }
                 HStack{
-                    Text("Keyware Type").padding()
+                    Text("Keyway Type").padding()
                     Spacer()
-                    Button("One", action:{ print("One")})
-                    Button("Two", action:{ print("Two")})
-                    Button("Three", action:{ print("Three")})
-                    Button("Four", action:{ print("Four")})
+                    Button("Schlage", action:{ print("Schlage")})
+                    Spacer()
+                    Button("Kwikset", action:{ print("Kwikset")})
                     Spacer()
                 }
                 Text("Number of Locks:")
-                TextField("Number", text: $numberOfLocks)
-                HStack{
-                    Spacer()
-                    Button("Confirm",action: {
-                    print("Hello World")
-                    })
-                    Spacer()
-                    Button("Cancel", action: {
-                        print("Luigi")
-                    })
-                    Spacer()
-                }
-                Toggle(isOn: $isOn) {
-                    Text("Master Key?")
-                    if(isOn)
-                    {
-                           Button("One", action:{ print("One")})
-                           Button("Two", action:{ print("Two")})
-                           Button("Three", action:{ print("Three")})
+                VStack{
+                        TextField("Name ", text: $numberOfLocksCombos)
+                                .padding()
+                    HStack{
+                        Spacer()
+                        Button(action: { self.addToList() }, label: {Text("Confirm")})
+                        Spacer()
+                        Button(action: {viewModel.numCombos.removeAll(); numberOfLocksCombos = ""}, label: {Text("Cancel")})
+                        Spacer()
+                    }
+                    List{
+                        ForEach(viewModel.numCombos){ x in
+                            Text(x.numberCombo)
+                        }
                     }
                 }
-                Spacer()
                 HStack{
                     Spacer()
                     Button("Confirm",action: {
@@ -77,13 +79,31 @@ struct createJob: View {
             }
         }
     }
+    func addToList(){
+        guard Int(numberOfLocksCombos) != nil else {
+            return
+        }
+        guard Int(numberOfLocksCombos)! > 0 else {
+            return
+        }
+        for _ in 1 ... Int(numberOfLocksCombos)!
+        {
+            var num = randomNumber()
+            let newCombo = numCombo(numberCombo: String(num))
+            viewModel.numCombos.append(newCombo)
+        }
+    }
+    func randomNumber() -> Int
+    {
+        return Int.random(in: 10000..<99999)
+    }
     
 }
 
-    /*
-struct createJob_Previews: PreviewProvider {
+    
+/*struct createJob_Previews: PreviewProvider {
     static var previews: some View {
         createJob()
     }
-}
-*/
+}*/
+
