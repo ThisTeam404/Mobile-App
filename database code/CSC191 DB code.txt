@@ -1,29 +1,38 @@
-﻿CREATE TABLE LOCKSMITH (
-        lockID char(3) NOT NULL,
-        lockfname varchar(30),
-        locklname varchar(30),
-        primary key(lockID));
+CREATE TABLE LOCKSMITH (
+	lockID char(3) NOT NULL,
+	lockfname varchar(30),
+	locklname varchar(30),
+	primary key(lockID));
 
 CREATE TABLE JOB (
-        jobID char(9) NOT NULL,
-        lockID char(3),
-        jobdate date,
-        numkeys int,
-        numlocks int,
-        cost dec(7,2),
-        address varchar(100),
-        locksmithnotes varchar(100),
-        primary key(jobID),
-        foreign key(lockID) references LOCKSMITH(lockID));
+	jobID char(9) NOT NULL,
+	lockID char(3),
+	jobdate date,
+	numkeys int,
+	numlocks int,
+	cost dec(7,2),
+	address varchar(100),
+	locksmithnotes varchar(100),
+	primary key(jobID),
+	foreign key(lockID) references LOCKSMITH(lockID));
 
 CREATE TABLE KEYLOCK (
-        keyID char(3) NOT NULL,
-        jobID char(9) NOT NULL,
-        unit varchar(100),
-        keyway char(3),
-        combination char(5),
-        primary key(keyID, jobID),
-        foreign key(jobID) references JOB(jobID));
+	jobID char(9) NOT NULL,
+	combination char(5) NOT NULL,
+        keyID char(3),
+	keyway char(3),
+	unit varchar(100),
+	door varchar(50),
+        keyLevelType enum('CK', 'MK', 'GMK') NOT NULL,
+	hasMK boolean,
+	bottomPins char(5),
+	masterPins char(5),
+	MKCombination char(5),
+	MKJobID char(9),
+	primary key(jobID, combination),
+	foreign key(jobID) references JOB(jobID),
+	foreign key(MKJobID, MKCombination) references KEYLOCK(jobID, combination));
+
 
 CREATE ROLE 'owner', 'employee';
 
@@ -39,7 +48,8 @@ INSERT INTO LOCKSMITH
 VALUES (000, 'Blaize', 'Bywater');
 
 INSERT INTO JOB
-VALUES (9876, 000, '2021-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
+VALUES (9876, 000, '2022-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
 
 INSERT INTO KEYLOCK
-VALUES (001, 9876, 'Sac State Dorm 191', 'KW1', '01010');
+VALUES (9876, 01010, 001, 'KW1', 'Sac State Dorm', 'Room 191', 'CK', true, 38424, 00002, 01010, 9876);
+
