@@ -28,7 +28,7 @@ class LocksViewModel: ObservableObject{
 struct AddLockView: View{
     @StateObject var viewModel = LocksViewModel()
     
-    @Binding var changeView:Bool
+    //@Binding var changeView:Bool
     
     @State var textName = ""
     @State var textDate = ""
@@ -43,11 +43,11 @@ struct AddLockView: View{
             Text("LockThatDown").bold().foregroundColor(Color.cyan)
             HStack{
                 Spacer()
-                Button(action: {self.changeView = true}) {
+                Button(action: {}) {
                     Text("Add Key").underline().foregroundColor(Color.gray)
                 }
                 Spacer()
-                Button(action:{ self.changeView=false}) {
+                Button(action:{}) {
                     Text("Create Job").foregroundColor(Color.gray)
                 }
                 Spacer()
