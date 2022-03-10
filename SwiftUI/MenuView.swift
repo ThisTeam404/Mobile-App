@@ -38,7 +38,7 @@ struct MenuView: View {
                         .cornerRadius(15)
                 })
                 
-                NavigationLink(destination: Text("Job Details"), label: {
+                NavigationLink(destination: JobDetailsView(), label: {
                     Text("Job Details")
                         .bold()
                         .frame(width: 300, height: 50)

@@ -41,17 +41,7 @@ struct AddLockView: View{
     var body: some View {
         VStack{
             Text("LockThatDown").bold().foregroundColor(Color.cyan)
-            HStack{
-                Spacer()
-                Button(action: {}) {
-                    Text("Add Key").underline().foregroundColor(Color.gray)
-                }
-                Spacer()
-                Button(action:{}) {
-                    Text("Create Job").foregroundColor(Color.gray)
-                }
-                Spacer()
-            }
+            
             NavigationView{
                 VStack(alignment: .center){
                     Section(header: Text("Add New Key").bold()){
