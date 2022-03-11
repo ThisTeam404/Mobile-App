@@ -508,7 +508,24 @@ class keyGenerator {
         }
         //if system has no MK, generate random bittings
         else {
-            /*generate change keys for a system with no MK*/
+            for i in 0..<numChangeKeys {
+                changeKey = ""
+                for chamber in 0..<combinationLength {
+                    var randomCut = Int.random(in: getMinDepth()...getMaxDepth())
+                    //check to make sure there's an odd even / even odd pattern
+                    if (chamber > 0) {
+                        let prevIndex = changeKey.index(changeKey.startIndex, offsetBy: (chamber-1))
+                        let prevCut = Int(changeKey[prevIndex...prevIndex]) ?? 0
+                        while ((randomCut % 2) == (prevCut % 2)) {
+                            randomCut = Int.random(in: getMinDepth()...getMaxDepth())
+                        }
+                    }
+                    changeKey += String(randomCut)
+                }
+                if(checkMACSValue(key: changeKey) && !isRepeatKeyBitting(viableKeysGenerated: changeKeys, currentKey: changeKey)){
+                    changeKeys[i] = changeKey
+                }
+            }
         }
     }
     
@@ -538,6 +555,7 @@ class keyGenerator {
             }
             else {
                 /*change key pins for a no MK system*/
+                changePins[i] = changeKeys[i]
             }
         }
     }
