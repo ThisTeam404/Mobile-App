@@ -21,6 +21,11 @@ class numComboViewModel: ObservableObject{
 struct createJob: View {
     //@Binding var changeView:Bool
     
+    @State var kwiksetFlag = false
+    @State var schlageFlag = false
+    @State var keyWayFlag = false
+    
+    
     @State var flag = false
     @State var numberOfLocksCombos: String = ""
     @State var isOn = false
@@ -64,21 +69,27 @@ struct createJob: View {
                         Spacer()
                         
                         //change color if chosen
-                        Button("Schlage", action:{ print("Schlage")})
+                        Button("Schlage", action:{schlageFlag = true;
+                            kwiksetFlag = false;})
                             .padding()
                             .frame(height: 25)
                             .foregroundColor(.white)
                             .background(.blue)
                             .cornerRadius(10)
+                            .disabled(schlageFlag)
+                            .buttonStyle(PlainButtonStyle());
                     
                         Spacer()
                         
-                        Button("Kwikset", action:{ print("Kwikset")})
+                        Button("Kwikset", action:{schlageFlag = false;
+                            kwiksetFlag = true;}).disabled(kwiksetFlag)
                             .padding()
                             .frame(height: 25)
                             .foregroundColor(.white)
                             .background(.blue)
                             .cornerRadius(10)
+                            .disabled(kwiksetFlag)
+                            .buttonStyle(PlainButtonStyle());
    
                         
                         Spacer()
@@ -99,7 +110,14 @@ struct createJob: View {
                             
                             Spacer()
             
-                            Button(action: { self.addToList() }, label: {Text("Confirm")})
+                            Button(action: {if(kwiksetFlag == false && schlageFlag == false)
+                                {
+                                    keyWayFlag = true
+                                }
+                                else
+                                {
+                                    self.addToList()
+                                }}, label: {Text("Confirm")}).alert(isPresented: $keyWayFlag) {Alert(title: Text("Error Message"), message: Text("Please choose a keyway type."), dismissButton: .default(Text("OK")))}
               
                             
                             Spacer()
@@ -139,7 +157,12 @@ struct createJob: View {
                         Button("Cancel", action: {
                             cancelFlag = true
                         })
-                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete your job information?"), primaryButton: .default(Text("Yes"), action: {print("Cancel test")}), secondaryButton: .cancel(Text("No")))}
+                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete your job information?"), primaryButton: .default(Text("Yes"), action: {
+                                kwiksetFlag = false
+                                schlageFlag = false
+                                viewModel.numCombos.removeAll()
+                                numberOfLocksCombos = ""
+                            }), secondaryButton: .cancel(Text("No")))}
     
                         Spacer()
                     } .padding()
