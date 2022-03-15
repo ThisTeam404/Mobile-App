@@ -52,4 +52,4 @@ VALUES (9876, 000, '2022-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of do
 
 INSERT INTO KEYLOCK
 VALUES (9876, 01010, 001, 'KW1', 'Sac State Dorm', 'Room 191', 'CK', true, 38424, 00002, 01010, 9876);
-
+ 
