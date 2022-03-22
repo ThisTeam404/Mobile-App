@@ -229,7 +229,28 @@ class keyGenerator {
     }
 
     func setMasterKey(masterKey:String) {
-        self.masterKey = masterKey
+        if((masterKey.count == combinationLength) && (checkMACSValue(key: masterKey))) {
+            var currCut:Int, currIndex:String.Index, prevCut:Int, prevIndex:String.Index
+            for i in 0..<combinationLength {
+                //check to make sure there's an odd even / even odd pattern
+                if (i > 0) {
+                    prevIndex = masterKey.index(masterKey.startIndex, offsetBy: (i-1))
+                    prevCut = Int(masterKey[prevIndex...prevIndex]) ?? 0
+                    
+                    currIndex = masterKey.index(masterKey.startIndex, offsetBy: i)
+                    currCut = Int(masterKey[currIndex...currIndex]) ?? 0
+                    
+                    if ((currCut % 2) == (prevCut % 2)) {
+                        print("master key isn't odd even pattern.")
+                        return
+                    }
+                }
+            }
+            self.masterKey = masterKey
+        }
+        else {
+            print("master key is not correct length or doesn't satisfy macs value.")
+        }
     }
     
     func setNumChangeKeys(numChangeKeys:Int) {
@@ -335,16 +356,16 @@ class keyGenerator {
         var newValues = [Int]() // int array to store the values that will be varied for the CK
         var mkIndex:String.Index // variable for obtaining the index of the masterKey
         var mkCut:Int // variable for an individual cut of the master key bitting
-        var currKey:String = ""
+        var currKey:String 
         
-        for varyChamber in 0..<combinationLength {
+        for firstVaryChamber in 0..<combinationLength {
             for possibleDepth in getMinDepth()...getMaxDepth() {
                 currKey = ""
-                mkIndex = masterKey.index(masterKey.startIndex, offsetBy: (varyChamber))
+                mkIndex = masterKey.index(masterKey.startIndex, offsetBy: (firstVaryChamber))
                 mkCut = Int(masterKey[mkIndex...mkIndex]) ?? 0
                 if(possibleDepth != mkCut) {
                     if((mkCut % 2) == (possibleDepth % 2)) {
-                        variedChambers.append(varyChamber)
+                        variedChambers.append(firstVaryChamber)
                         newValues.append(possibleDepth)
                         
                         if(numVaries == 1) {
@@ -385,7 +406,7 @@ class keyGenerator {
                                                    if(variedChambers.contains(currKeyChamber)) {
                                                        let indexOfVary = variedChambers.firstIndex(of: currKeyChamber) ?? 0
                                                        currKey += String(newValues[indexOfVary])
-                                                       if(indexOfVary != varyChamber) {
+                                                       if(variedChambers[indexOfVary] != firstVaryChamber) {
                                                            variedChambers.remove(at: indexOfVary)
                                                            newValues.remove(at: indexOfVary)
                                                        }
@@ -437,7 +458,7 @@ class keyGenerator {
                                                                        if(variedChambers.contains(currKeyChamber)) {
                                                                            let indexOfVary = variedChambers.firstIndex(of: currKeyChamber) ?? 0
                                                                            currKey += String(newValues[indexOfVary])
-                                                                           if((indexOfVary != varyChamber) || (indexOfVary != secondVaryChamber)) {
+                                                                           if((variedChambers[indexOfVary] != firstVaryChamber) && (variedChambers[indexOfVary] != secondVaryChamber)) {
                                                                                variedChambers.remove(at: indexOfVary)
                                                                                newValues.remove(at: indexOfVary)
                                                                            }
@@ -506,21 +527,20 @@ class keyGenerator {
     func generateChangeKeys() {
         var randomCK:Int = 0
         var changeKey:String
+        var viableKey:Bool
         //if system has MK, generate viable keys then pick random ones for bitting
         if(masterKey.isEmpty == false) {
             var allViableKeys = [String]()
-            if(numChangeKeys <= viableKeys(numVaries: 1).count) {
-                allViableKeys = viableKeys(numVaries: 1)
-            }
-            else if(numChangeKeys <= viableKeys(numVaries: 2).count) {
-                allViableKeys = viableKeys(numVaries: 2)
-            }
-            
-            else if(numChangeKeys <= viableKeys(numVaries: 3).count) {
-                allViableKeys = viableKeys(numVaries: 3)
-            }
-            else {
-                print("Not possible to generate this many keys with this master key.")
+            for numVaries in (1...3) {
+                let tempViableKeys = viableKeys(numVaries: numVaries)
+                if(numChangeKeys <= tempViableKeys.count) {
+                    allViableKeys = tempViableKeys
+                    break
+                }
+                else if(numVaries == 3) {
+                    print("Not possible to generate this many keys with this master key.")
+                    return
+                }
             }
             
             for i in 0..<numChangeKeys {
@@ -532,21 +552,25 @@ class keyGenerator {
         //if system has no MK, generate random bittings
         else {
             for i in 0..<numChangeKeys {
-                changeKey = ""
-                for chamber in 0..<combinationLength {
-                    var randomCut = Int.random(in: getMinDepth()...getMaxDepth())
-                    //check to make sure there's an odd even / even odd pattern
-                    if (chamber > 0) {
-                        let prevIndex = changeKey.index(changeKey.startIndex, offsetBy: (chamber-1))
-                        let prevCut = Int(changeKey[prevIndex...prevIndex]) ?? 0
-                        while ((randomCut % 2) == (prevCut % 2)) {
-                            randomCut = Int.random(in: getMinDepth()...getMaxDepth())
+                viableKey = false
+                 while(viableKey == false) {
+                     changeKey = ""
+                     for chamber in 0..<combinationLength {
+                        var randomCut = Int.random(in: getMinDepth()...getMaxDepth())
+                        //check to make sure there's an odd even / even odd pattern
+                        if (chamber > 0) {
+                            let prevIndex = changeKey.index(changeKey.startIndex, offsetBy: (chamber-1))
+                            let prevCut = Int(changeKey[prevIndex...prevIndex]) ?? 0
+                            while ((randomCut % 2) == (prevCut % 2)) {
+                                randomCut = Int.random(in: getMinDepth()...getMaxDepth())
+                            }
                         }
+                        changeKey += String(randomCut)
                     }
-                    changeKey += String(randomCut)
-                }
-                if(checkMACSValue(key: changeKey) && !isRepeatKeyBitting(viableKeysGenerated: changeKeys, currentKey: changeKey)){
-                    changeKeys[i] = changeKey
+                    if(checkMACSValue(key: changeKey) && !isRepeatKeyBitting(viableKeysGenerated: changeKeys, currentKey: changeKey)){
+                        viableKey = true
+                        changeKeys[i] = changeKey
+                    }
                 }
             }
         }
