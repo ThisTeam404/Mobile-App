@@ -1,25 +1,17 @@
-CREATE TABLE LOCKSMITH (
-	lockID char(3) NOT NULL,
-	lockfname varchar(30),
-	locklname varchar(30),
-	primary key(lockID));
-
 CREATE TABLE JOB (
-	jobID char(9) NOT NULL,
-	lockID char(3),
-	jobdate date,
+	jobID int NOT NULL AUTO_INCREMENT,
+	jobdate datetime DEFAULT CURRENT_TIMESTAMP,
 	numkeys int,
 	numlocks int,
 	cost dec(7,2),
 	address varchar(100),
-	locksmithnotes varchar(100),
-	primary key(jobID),
-	foreign key(lockID) references LOCKSMITH(lockID));
+	notes varchar(100),
+	primary key(jobID));
 
 CREATE TABLE KEYLOCK (
-	jobID char(9) NOT NULL,
+	jobID int NOT NULL,
 	combination char(5) NOT NULL,
-        keyID char(3),
+        keyID int NOT NULL AUTO_INCREMENT ,
 	keyway char(3),
 	unit varchar(100),
 	door varchar(50),
@@ -28,8 +20,9 @@ CREATE TABLE KEYLOCK (
 	bottomPins char(5),
 	masterPins char(5),
 	MKCombination char(5),
-	MKJobID char(9),
+	MKJobID int,
 	primary key(jobID, combination),
+        key(keyID),
 	foreign key(jobID) references JOB(jobID),
 	foreign key(MKJobID, MKCombination) references KEYLOCK(jobID, combination));
 
@@ -44,11 +37,8 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON JOB.* TO 'owner';
 GRANT SELECT, INSERT, UPDATE, DELETE ON KEYLOCK.* TO 'owner';
 
 
-INSERT INTO LOCKSMITH
-VALUES (000, 'Blaize', 'Bywater');
-
 INSERT INTO JOB
-VALUES (9876, 000, '2022-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
+VALUES (9876, '2022-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
 
 INSERT INTO KEYLOCK
 VALUES (9876, 01010, 001, 'KW1', 'Sac State Dorm', 'Room 191', 'CK', true, 38424, 00002, 01010, 9876);
