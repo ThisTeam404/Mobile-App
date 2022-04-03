@@ -2,7 +2,7 @@
 //  createJob.swift
 //  GoogleLoginOption
 //
-//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/2/22.
+//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/3/22.
 //
 
 import SwiftUI
@@ -13,6 +13,7 @@ struct numCombo: Identifiable{
     @State var numKeys: String
     var combination: [String]
     var combinationPins: [String]
+    var keyWayType = ""
     var hasMk: Bool = false
     var masterKey: String
     var masterPins: [String]
@@ -20,7 +21,7 @@ struct numCombo: Identifiable{
 
 class numComboViewModel: ObservableObject{
 
-    @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [""], combinationPins: [""], hasMk: false, masterKey: "", masterPins: [""])]
+    @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [""], combinationPins: [""], keyWayType: "", hasMk: false, masterKey: "", masterPins: [""])]
 
 }
 
@@ -259,6 +260,7 @@ struct createJob: View {
                                 confirmFlag2 = false
                                 schlageFlag = false
                                 kwiksetFlag = false
+                                keywayVariable = ""
                                 numberOfLocksCombos = 1
                                 numChangeKeysText = ""
                                 masterKeyLevelValue = "0"
@@ -280,9 +282,10 @@ struct createJob: View {
                         Text("# Key")
                         Text("Key combo #")
                         Text("Key Pins #")
+                        Text("Key Type")
                         Text("Is MK")
                         Text("Master combo #")
-                        Text("Master Pins")
+                        Text("M Pins")
                     }
                     List{
                         
@@ -293,6 +296,7 @@ struct createJob: View {
                             numComboRow(numKeys: num.numKeys,
                                         combo: String(num.combination.joined(separator: ", ")),
                                         comboPins: String(num.combinationPins.joined(separator: ", ")),
+                                        keyWay: num.keyWayType,
                                         hasMKValue: String(num.hasMk),
                                         masterKey: String(num.masterKey),
                                         masterPins: String(num.masterPins.joined(separator: ", ")))
@@ -319,6 +323,7 @@ struct createJob: View {
                             cancelFlag = true
                         })
                             .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
+                                keywayVariable = ""
                                 kwiksetFlag = false
                                 schlageFlag = false
                                 confirmFlag2 = false
@@ -355,7 +360,7 @@ struct createJob: View {
             masterPins1 = ["N/A"]
             changePins1 = [""]
         }
-        let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, hasMk: isOn, masterKey: masterKey1, masterPins: masterPins1)
+        let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, keyWayType: keywayVariable, hasMk: isOn, masterKey: masterKey1, masterPins: masterPins1)
             viewModel.numCombos.append(newCombo)
         numberOfLocksCombos = numberOfLocksCombos + 1
     }
@@ -795,6 +800,7 @@ struct numComboRow: View{
     let numKeys: String
     let combo: String
     let comboPins: String
+    let keyWay: String
     let hasMKValue: String
     let masterKey: String
     let masterPins: String
@@ -804,6 +810,7 @@ struct numComboRow: View{
             Text(numKeys)
             Text(combo)
             Text(comboPins)
+            Text(keyWay)
             Text(hasMKValue)
             Text(masterKey)
             Text(masterPins)
