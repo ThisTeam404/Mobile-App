@@ -2,37 +2,63 @@
 //  createJob.swift
 //  GoogleLoginOption
 //
-//  Created by Estepa, Kaily on 3/9/22.
+//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/2/22.
 //
 
 import SwiftUI
 
+
 struct numCombo: Identifiable{
     var id = UUID()
-    @State var numberCombo: String = ""
+    @State var numKeys: String
+    var combination: [String]
+    var combinationPins: [String]
+    var hasMk: Bool = false
+    var masterKey: String
+    var masterPins: [String]
 }
 
 class numComboViewModel: ObservableObject{
 
-    @Published var numCombos: [numCombo] = []
+    @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [""], combinationPins: [""], hasMk: false, masterKey: "", masterPins: [""])]
 
 }
 
+
+
+
 struct createJob: View {
-    //@Binding var changeView:Bool
     
     @State var kwiksetFlag = false
     @State var schlageFlag = false
-    @State var keyWayFlag = false
+    @State var keyWayFlag = true
     
     
     @State var flag = false
-    @State var numberOfLocksCombos: String = ""
-    @State var isOn = false
+    @State var numberOfLocksCombos: Int = 1
+    @State var isOn = false                             //the isOn value will take care of the hasMKValue
     @State var confirmFlag: Bool = false
+    @State var confirmFlag2: Bool = false
     @State var cancelFlag: Bool = false
     
     @ObservedObject var viewModel = numComboViewModel()
+    
+    @State var numChangeKeysText = ""
+    @State var masterKeyLevelValue = "0"
+    @State var keywayVariable = ""
+ 
+    @State var bottomPinsText = ""
+    @State var masterPinsText = ""
+    @State var combinationText = ""
+    
+    
+    @State var someKeyGenerator1 = keyGenerator(keyway: "", numChangeKeys: 0, masterKeyLevel: 0)
+    
+    @State var changeKey1 = [""]
+    @State var changePins1 = [""]
+    @State var masterKey1 = ""
+    @State var masterPins1 = [""]
+    
     
     var body: some View {
       
@@ -41,23 +67,9 @@ struct createJob: View {
             ZStack{
         
                 VStack{
-                
+                    //.navigationBarTitle(Text("LockThatDown"))
                     
-                    HStack{
-                        //Meant to go to add lock page or create a new job
-                        Spacer()
-                        
-                        Button("Add Lock",action: {})
-                  
-                        
-                        Spacer()
-                        
-                        Button("Create Job", action: {})
-             
-                        
-                        Spacer()
-                        
-                    }
+                    Text("Create Job")
                     
                     HStack{
                         
@@ -67,29 +79,57 @@ struct createJob: View {
                             .padding()
                         
                         Spacer()
-                        
-                        //change color if chosen
-                        Button("Schlage", action:{schlageFlag = true;
-                            kwiksetFlag = false;})
-                            .padding()
-                            .frame(height: 25)
-                            .foregroundColor(.white)
-                            .background(.blue)
-                            .cornerRadius(10)
-                            .disabled(schlageFlag)
-                            .buttonStyle(PlainButtonStyle());
+                        if(!schlageFlag)
+                        {
+                            Button("Schlage", action:{schlageFlag = true;
+                                kwiksetFlag = false; keyWayFlag = false
+                                keywayVariable = "SC1"
+                            })
+                                .padding()
+                                .frame(height: 25)
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .cornerRadius(8)
+                                .disabled(schlageFlag)
+                        }
+                        else
+                        {
+                            Button("Schlage", action:{})
+                                .padding()
+                                .frame(height: 25)
+                                .foregroundColor(.blue)
+                                .background(.white)
+                                .cornerRadius(8)
+                                .border(Color.blue, width: 2)
+                            
+                        }
                     
                         Spacer()
                         
-                        Button("Kwikset", action:{schlageFlag = false;
-                            kwiksetFlag = true;}).disabled(kwiksetFlag)
-                            .padding()
-                            .frame(height: 25)
-                            .foregroundColor(.white)
-                            .background(.blue)
-                            .cornerRadius(10)
-                            .disabled(kwiksetFlag)
-                            .buttonStyle(PlainButtonStyle());
+                        if(!kwiksetFlag)
+                        {
+                            Button("Kwikset", action:{schlageFlag = false;
+                                kwiksetFlag = true;keyWayFlag = false
+                                keywayVariable = "KW1"
+                            }).disabled(kwiksetFlag)
+                                .padding()
+                                .frame(height: 25)
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .cornerRadius(8)
+                                .disabled(kwiksetFlag)
+                        }
+                        else
+                        {
+                            Button("Kwikset", action:{})
+                                .padding()
+                                .frame(height: 25)
+                                .foregroundColor(.blue)
+                                .background(.white)
+                                .cornerRadius(8)
+                                .border(Color.blue, width: 2)
+                            
+                        }
    
                         
                         Spacer()
@@ -97,59 +137,180 @@ struct createJob: View {
                     }
 
                     VStack{
-                        
-                        Text("Number of Locks:")
-                            .padding()
-
-                        TextField("Number of Locks ", text: $numberOfLocksCombos)
+                        TextField("Number of Change Keys", text: $numChangeKeysText)
                             .padding()
                             .frame(width: 300)
                             .border(.blue)
+
+                        Menu{
+                            Button("0", action: {masterKeyLevelValue = "0"
+                                isOn = false
+                            })
+                            Button("1", action: {masterKeyLevelValue = "1"
+                                isOn = true
+                            })
+                        } label: {
+                            Label("Master Key Levels", systemImage: "chevron.down")}
+                        
+                        Text(masterKeyLevelValue)
+                        
+                        
+                        if(kwiksetFlag || schlageFlag)
+                        {
+                        Button("Generate", action:{
+                            confirmFlag2 = true
+                            guard Int(numChangeKeysText) != nil else {
+                                confirmFlag2 = false
+                                return}
+
+                            guard Int(numChangeKeysText)! > 0  else {
+                                confirmFlag2 = false
+                                return}
+                            
+                            
+                            
+                            someKeyGenerator1 = keyGenerator(keyway: keywayVariable, numChangeKeys: Int(numChangeKeysText) ?? 1, masterKeyLevel: Int(masterKeyLevelValue) ?? 0)
+                            
+                            if(isOn)
+                            {
+                                someKeyGenerator1.generateMasterKey() //step 1
+                                masterKey1 = someKeyGenerator1.getMasterKey()
+                                
+                                someKeyGenerator1.generateChangeKeys() //step 2
+                                changeKey1 = someKeyGenerator1.getChangeKeys()
+
+                                someKeyGenerator1.generateChangePins() //step 3
+                                changePins1 = someKeyGenerator1.getChangePins()
+                                
+                                someKeyGenerator1.generateMasterPins() //step 4
+                                masterPins1 = someKeyGenerator1.getMasterPins()
+                            }
+                            else
+                            {
+                                someKeyGenerator1.generateChangeKeys()
+                                changeKey1 = someKeyGenerator1.getChangeKeys()
+
+                                someKeyGenerator1.generateChangePins()
+                                changePins1 = someKeyGenerator1.getChangePins()
+                            }
+                        })
+                            .frame(width: 250, height: 35, alignment: .center)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                            .foregroundColor(Color.white)
+                            .disabled(keyWayFlag)
+                        }
+                        else{
+                            Button("Generate", action:{})
+                                .frame(width: 250, height: 35, alignment: .center)
+                                .background(Color.white)
+                                .cornerRadius(8)
+                                .foregroundColor(Color.blue)
+                                .disabled(keyWayFlag)
+                                .border(Color.blue, width: 2)
+                        }
+                        
                      
                         HStack{
                             
                             Spacer()
             
-                            Button(action: {if(kwiksetFlag == false && schlageFlag == false)
+                            if(confirmFlag2)
+                            {
+                            Button(action: {
+                                if(!flag)
+                                {
+                                    flag = true
+                                    viewModel.numCombos.removeAll()
+                                }
+                                
+                                
+                                if(kwiksetFlag == false && schlageFlag == false)
                                 {
                                     keyWayFlag = true
                                 }
                                 else
                                 {
                                     self.addToList()
-                                }}, label: {Text("Confirm")}).alert(isPresented: $keyWayFlag) {Alert(title: Text("Error Message"), message: Text("Please choose a keyway type."), dismissButton: .default(Text("OK")))}
+                                    confirmFlag2 = false
+                                }}, label: {Text("Confirm")})
+                                .padding()
+                                .frame(width: 175, height: 35)
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .cornerRadius(8)
+                            }
+                            else
+                            {
+                                Button("Confirm", action:{})
+                                    .frame(width: 175, height: 35, alignment: .center)
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    .foregroundColor(Color.blue)
+                                    .disabled(confirmFlag2)
+                                    .border(Color.blue, width: 2)
+                            }
               
                             
                             Spacer()
                            
-                            Button(action: {viewModel.numCombos.removeAll(); numberOfLocksCombos = ""}, label: {Text("Cancel")})
+                            Button(action: {
+                                keyWayFlag = false
+                                confirmFlag2 = false
+                                schlageFlag = false
+                                kwiksetFlag = false
+                                numberOfLocksCombos = 1
+                                numChangeKeysText = ""
+                                masterKeyLevelValue = "0"
+                            }, label: {Text("Reset")})
+                                .padding()
+                                .frame(width: 175, height: 35)
+                                .foregroundColor(.white)
+                                .background(.blue)
+                                .cornerRadius(8)
                   
              
                             Spacer()
                         }
-                            .padding()
-                            .frame(width: 300, height: 35)
-                            .foregroundColor(.white)
-                            .background(.blue)
-                
                         
-                    
-                        List{
-                            
-                            ForEach(viewModel.numCombos){ x in
-                                Text(x.numberCombo)
-                            }
-                            
-                        }
+                        
                     }
-                    
+                    Spacer()
+                    HStack{
+                        Text("# Key")
+                        Text("Key combo #")
+                        Text("Key Pins #")
+                        Text("Is MK")
+                        Text("Master combo #")
+                        Text("Master Pins")
+                    }
+                    List{
+                        
+                        if(flag)
+                        {
+                        ForEach(viewModel.numCombos){ num in
+                            
+                            numComboRow(numKeys: num.numKeys,
+                                        combo: String(num.combination.joined(separator: ", ")),
+                                        comboPins: String(num.combinationPins.joined(separator: ", ")),
+                                        hasMKValue: String(num.hasMk),
+                                        masterKey: String(num.masterKey),
+                                        masterPins: String(num.masterPins.joined(separator: ", ")))
+                        }
+                        }
+                        
+                    }
                     HStack{
                         
                         Spacer()
                         
                         Button("Confirm",action: {
                             confirmFlag = true
-                        })
+                        }).padding()
+                            .frame(width: 175, height: 35)
+                            .foregroundColor(.white)
+                            .background(.blue)
+                            .cornerRadius(8)
                             .alert(isPresented: $confirmFlag) {Alert(title: Text("Confirmation"), message: Text("Do you want to save the job information to the Add Lock page?"), primaryButton: .default(Text("Yes"), action: {print("Confirm test")}), secondaryButton: .cancel(Text("No")))}
               
                         Spacer()
@@ -157,18 +318,24 @@ struct createJob: View {
                         Button("Cancel", action: {
                             cancelFlag = true
                         })
-                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete your job information?"), primaryButton: .default(Text("Yes"), action: {
+                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
                                 kwiksetFlag = false
                                 schlageFlag = false
+                                confirmFlag2 = false
+                                keyWayFlag = true
                                 viewModel.numCombos.removeAll()
-                                numberOfLocksCombos = ""
+                                numberOfLocksCombos = 1
+                                numChangeKeysText = ""
+                                masterKeyLevelValue = "0"
                             }), secondaryButton: .cancel(Text("No")))}
+                            .padding()
+                            .frame(width: 175, height: 35)
+                            .foregroundColor(.white)
+                            .background(.blue)
+                            .cornerRadius(8)
     
                         Spacer()
-                    } .padding()
-                        .frame(width: 300, height: 25)
-                        .foregroundColor(.white)
-                        .background(.blue)
+                    }
                         
                     
                 }
@@ -182,24 +349,16 @@ struct createJob: View {
     }
     
     func addToList() {
-        
-        guard Int(numberOfLocksCombos) != nil else { return }
-        
-        guard Int(numberOfLocksCombos)! > 0 else { return }
-        
-        for _ in 1 ... Int(numberOfLocksCombos)!
+        if(!isOn)
         {
-            let num = randomNumber()
-            let newCombo = numCombo(numberCombo: String(num))
-            viewModel.numCombos.append(newCombo)
+            masterKey1 = "N/A"
+            masterPins1 = ["N/A"]
+            changePins1 = [""]
         }
-        
+        let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, hasMk: isOn, masterKey: masterKey1, masterPins: masterPins1)
+            viewModel.numCombos.append(newCombo)
+        numberOfLocksCombos = numberOfLocksCombos + 1
     }
-    
-    func randomNumber() -> Int {
-        return Int.random(in: 10000..<99999)
-    }
-    
 }
 
 class keyGenerator {
@@ -356,7 +515,7 @@ class keyGenerator {
         var newValues = [Int]() // int array to store the values that will be varied for the CK
         var mkIndex:String.Index // variable for obtaining the index of the masterKey
         var mkCut:Int // variable for an individual cut of the master key bitting
-        var currKey:String 
+        var currKey:String
         
         for firstVaryChamber in 0..<combinationLength {
             for possibleDepth in getMinDepth()...getMaxDepth() {
@@ -631,8 +790,29 @@ class keyGenerator {
         }
     }
 }
+
+struct numComboRow: View{
+    let numKeys: String
+    let combo: String
+    let comboPins: String
+    let hasMKValue: String
+    let masterKey: String
+    let masterPins: String
+    
+    var body: some View{
+        HStack{
+            Text(numKeys)
+            Text(combo)
+            Text(comboPins)
+            Text(hasMKValue)
+            Text(masterKey)
+            Text(masterPins)
+        }
+    }
+    
+}
 struct CreateJobView_Previews: PreviewProvider {
     static var previews: some View {
-       createJob()
+        createJob()
     }
 }
