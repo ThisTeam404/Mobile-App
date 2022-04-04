@@ -10,22 +10,18 @@ import SwiftUI
 struct LoginView: View {
     
     @EnvironmentObject var loginVM: LoginViewModel
-    
-    @State private var userName: String = ""
-    @State private var password: String = ""
+ 
     
     var body: some View {
         
         ZStack{
-            
             Color
-                .blue.opacity(0.9)
+                .blue
+                .opacity(0.8)
                 .ignoresSafeArea()
-            
             Circle()
                 .scale(1.1)
                 .foregroundColor(.white)
-            
             Circle()
                 .scale(1.1)
                 .foregroundColor(.blue.opacity(0.3))
@@ -34,47 +30,34 @@ struct LoginView: View {
                 .scale(1.0)
                 .foregroundColor(.white)
             
-            
-            VStack {
-                
-                Text("Lock That Down")
-                    .bold()
-                    .multilineTextAlignment(.leading)
+            VStack{
+                Text("WELCOME")
+                    .font(.largeTitle)
+                    .italic()
                     .padding()
-                    .frame(width: 160.0, height: 50.0)
+                    .offset(x: 0, y: -50)
+                    .foregroundColor(.white)
                 
-                
-                Text("User Name")
-                TextField("type here", text: $userName)
-                    .padding(.all)
-                    .frame(width: 200.0, height: 50.0)
-                    .border(Color.blue)
-                    .background(Color.black.opacity(0.05))
-                
-                Text(" Password")
-                SecureField("type here", text: $password).textContentType(.password)
-                    .padding(.all)
-                    .frame(width: 200.0, height: 50.0)
-                    .border(Color.blue)
-                    .background(Color.black.opacity(0.05))
-                
-                Button("Login ", action:{
-                    print("sign in with google")
-                })
-                    .offset(x: -80)
+                Image("Logo")
+                    .resizable()
+                    .clipShape(Circle())
+                    .frame(width: 350, height: 350)
+                    .offset(x: 0, y: -10)
                 
                 Button("Google Sign In ", action:{
                     loginVM.signUpWithGoogle()
+         
                 })
                     .padding()
-                    .foregroundColor(.white)
-                    .background(.blue)
-                    .cornerRadius(10)
-                
+                    .foregroundColor(.blue)
+                    .background(.white)
+                    .cornerRadius(20)
+                    .offset(x: 0, y: 30)
             }
         }
     }
 }
+
 
 
 struct LoginView_Previews: PreviewProvider {
