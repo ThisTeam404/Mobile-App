@@ -9,16 +9,41 @@ import SwiftUI
 
 struct MenuView: View {
     
-    @State private var changeView = false
+    @EnvironmentObject var signOutOption: LoginViewModel
+    @StateObject var details = JobDetails()
     
-    var body: some View {
+    var body: some View{
         
-        NavigationView{
-            
+      NavigationView{
+        ZStack{
             VStack{
                 Spacer()
                 
-                Text("Menu").font(.largeTitle).bold().multilineTextAlignment(.trailing)
+                HStack{
+                    Text("Welcome")
+                        .italic()
+                    
+                    Text(signOutOption.userInfo)
+                        .italic()
+                }
+                
+                ZStack{
+                    Text("MENU")
+                        .foregroundColor(.black)
+                        .font(.largeTitle)
+                        .bold()
+                        .multilineTextAlignment(.trailing)
+                        .padding()
+                        .offset(x: 1.5, y: 2)
+                    
+                    Text("MENU")
+                        .foregroundColor(.blue)
+                        .font(.largeTitle)
+                        .bold()
+                        .multilineTextAlignment(.trailing)
+                        .padding()
+                
+                }
                 
                 NavigationLink(destination: createJob(), label: {
                     Text("Create Job")
@@ -38,7 +63,7 @@ struct MenuView: View {
                         .cornerRadius(15)
                 })
                 
-                NavigationLink(destination: JobDetailsView(), label: {
+                NavigationLink(destination: JobDetailsView(details: details), label: {
                     Text("Job Details")
                         .bold()
                         .frame(width: 300, height: 50)
@@ -47,7 +72,7 @@ struct MenuView: View {
                         .cornerRadius(15)
                 })
                 
-                NavigationLink(destination: Text("Notes"), label: {
+                NavigationLink(destination: NotesView(), label: {
                     Text("Notes")
                         .bold()
                         .frame(width: 300, height: 50)
@@ -67,18 +92,40 @@ struct MenuView: View {
                 
                 Spacer()
                 
+                Button("Sign Out", action:{
+                    signOutOption.signOut()
+                })
+                    .foregroundColor(.black)
+                
             }.navigationBarTitle("MENU")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
-                        Image("smilingLocksmith")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .padding()
-                        
+                        HStack{
+                            Text("LOCK THAT DOWN")
+                                .bold()
+                                .italic()
+                                .padding()
+                                
+                            Image("Logo")
+                                .resizable()
+                                .clipShape(Circle())
+                                .frame(width: 50, height: 50)
+                                .padding()
+                                .offset(x: -30, y: 0)
+                                
+                        }
+                        .offset(x: 20,y: 0)
                     }
                 }
                 .offset(x: 0, y: -50.0)
+    
+        }.background(Image("Background")
+            .resizable()
+            .scaledToFill()
+            .clipped()
+            .opacity(0.40))
+        .edgesIgnoringSafeArea([.top, .bottom])
         }
     }
 }
@@ -89,5 +136,3 @@ struct MenuView_Previews: PreviewProvider {
         MenuView()
     }
 }
-
-
