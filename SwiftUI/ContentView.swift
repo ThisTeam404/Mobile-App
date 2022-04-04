@@ -10,11 +10,16 @@ import SwiftUI
 struct ContentView: View {
     
     @EnvironmentObject var loginVM: LoginViewModel
+    @ObservedObject var networkModel = Network()
     
     var body: some View {
         return Group{
+            //if able to login
             if(loginVM.successfulLogin){
-                MenuView()
+                if(!networkModel.loading)
+                {
+                    MenuView()
+                }
             }
             else{
                 LoginView()
@@ -31,3 +36,4 @@ struct ContentView_Previews: PreviewProvider {
            }
     }
 }
+
