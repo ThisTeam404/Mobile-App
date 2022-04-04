@@ -25,9 +25,6 @@ class numComboViewModel: ObservableObject{
 
 }
 
-
-
-
 struct createJob: View {
     
     @State var kwiksetFlag = false
@@ -70,7 +67,8 @@ struct createJob: View {
                 VStack{
                     //.navigationBarTitle(Text("LockThatDown"))
                     
-                    Text("Create Job")
+                    Spacer()
+                    //Text("Create Job")
                     
                     HStack{
                         
@@ -135,14 +133,15 @@ struct createJob: View {
                         
                         Spacer()
                     
-                    }
+                    }.offset(y:60)
 
                     VStack{
                         TextField("Number of Change Keys", text: $numChangeKeysText)
                             .padding()
                             .frame(width: 300)
                             .border(.blue)
-
+                            .background(.black.opacity(0.1))
+                        HStack{
                         Menu{
                             Button("0", action: {masterKeyLevelValue = "0"
                                 isOn = false
@@ -154,7 +153,7 @@ struct createJob: View {
                             Label("Master Key Levels", systemImage: "chevron.down")}
                         
                         Text(masterKeyLevelValue)
-                        
+                        }
                         
                         if(kwiksetFlag || schlageFlag)
                         {
@@ -245,11 +244,11 @@ struct createJob: View {
                             {
                                 Button("Confirm", action:{})
                                     .frame(width: 175, height: 35, alignment: .center)
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                    .foregroundColor(Color.blue)
+                                    .background(.blue)
+                                    .foregroundColor(.white)
                                     .disabled(confirmFlag2)
                                     .border(Color.blue, width: 2)
+                                    .cornerRadius(8)
                             }
               
                             
@@ -276,7 +275,7 @@ struct createJob: View {
                         }
                         
                         
-                    }
+                    }.offset(y:50)
                     Spacer()
                     HStack{
                         Text("# Key")
@@ -286,7 +285,7 @@ struct createJob: View {
                         Text("Is MK")
                         Text("Master combo #")
                         Text("M Pins")
-                    }
+                    }.offset(y:45)
                     List{
                         
                         if(flag)
@@ -303,7 +302,7 @@ struct createJob: View {
                         }
                         }
                         
-                    }
+                    }.offset(y:35)
                     HStack{
                         
                         Spacer()
@@ -340,16 +339,17 @@ struct createJob: View {
                             .cornerRadius(8)
     
                         Spacer()
-                    }
+                    }.frame(height:110)
                         
-                    
+                    Spacer()
                 }
                 
-            }//.offset(x: 0, y: -40.0)
-            
-        //}.navigationTitle(Text("Create Job"))
-          //  .navigationBarTitle("Create Job")
-            //    .navigationBarTitleDisplayMode(.inline)
+            }.background(Image("Background")
+                .resizable()
+                .scaledToFill()
+                .clipped()
+                .opacity(0.25))
+            .edgesIgnoringSafeArea([.top,.bottom])
         
     }
     
