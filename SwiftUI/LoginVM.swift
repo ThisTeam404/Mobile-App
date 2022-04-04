@@ -12,6 +12,7 @@ import GoogleSignIn
 class LoginViewModel: ObservableObject{
     
     @Published var successfulLogin: Bool = false
+    @Published var userInfo: String = ""
     
     func signUpWithGoogle(){
         
@@ -21,7 +22,7 @@ class LoginViewModel: ObservableObject{
         //Get Configuration
         let config = GIDConfiguration(clientID: clientId)
         
-        //GoogleSignIn
+        //GoogleSignIn -- two parameters: the firebase config and the current view
         GIDSignIn.sharedInstance.signIn(with: config, presenting: ApplicationUtility.rootViewController){
             [self] user, err in
             
@@ -30,6 +31,9 @@ class LoginViewModel: ObservableObject{
                 return
             }
             
+            //authentication , authenticates user/client
+            //token acquired from google sent to the Firebase Authentication, which will be verified
+            //returns repose to client
             guard
                 let authentication = user?.authentication,
                 let idToken = authentication.idToken
@@ -47,8 +51,19 @@ class LoginViewModel: ObservableObject{
                 
                 guard let user = result?.user else { return }
                 print(user.displayName!)
-                successfulLogin.toggle()
+                self.userInfo = user.displayName! 
+                self.successfulLogin.toggle()
             }
+        }
+    }
+    
+    func signOut(){
+        
+        GIDSignIn.sharedInstance.signOut()
+        try? Auth.auth().signOut()
+        
+        withAnimation{
+            self.successfulLogin.toggle()
         }
     }
 }
