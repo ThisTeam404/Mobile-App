@@ -18,17 +18,13 @@ struct Lock: Identifiable{
     //let address: String
     //let cost: String
 }
+
 class LocksViewModel: ObservableObject{
-    @Published var locks: [Lock] = [
-        Lock( bitting: "", keyWay: "", unitNum: ""
-             //, address: "Address", cost: "Cost", keyWay: "Keyway Type"
-            )
-            ]
+    @Published var locks: [Lock] = [Lock( bitting: "", keyWay: "", unitNum: "")]
 }
 
 struct AddLockView: View{
     @StateObject var viewModel = LocksViewModel()
-    //@Binding var changeView:Bool
     
     @State var textName = ""
     @State var textDate = ""
@@ -39,89 +35,129 @@ struct AddLockView: View{
     @State var textKeyway = ""
     @State var textMasterKey = ""
     @State var textUnit = ""
-    //@State var testkeyWay = ""
     @State var numKeys = 0
     
     
     var body: some View {
+        
         VStack(alignment: .center){
-            Text("LockThatDown").bold().foregroundColor(Color.cyan)
+            Spacer()
+            
+            Text("Information")
+                .bold()
             
             Spacer()
+            
             HStack{
                 TextField("Name", text: $textName)
                     .padding()
+                    .border(.blue.opacity(0.8))
+                    .background(.black.opacity(0.1))
+                
                 TextField("Date", text: $textDate)
                     .padding()
-            }
+                    .border(.blue.opacity(0.8))
+                    .background(.black.opacity(0.1))
+                
+            }.frame(width:350)
+            
             Spacer()
+            
             HStack{
                 TextField("Cost", text: $textCost)
                     .padding()
+                    .background(.black.opacity(0.1))
+                    .border(.blue.opacity(0.8))
+                
                 TextField("Address", text: $textAddress)
                     .padding()
-            }
+                    .background(.black.opacity(0.1))
+                    .border(.blue.opacity(0.8))
+            }.frame(width:350)
+            
             Spacer()
+            
             HStack{
                 TextField("Master Pins", text: $textMasterKey)
                     .padding()
+                    .background(.black.opacity(0.1))
+                    .border(.blue.opacity(0.8))
+                
                 TextField("Comment", text: $textComment)
                     .padding()
-            }
+                    .background(.black.opacity(0.1))
+                    .border(.blue.opacity(0.8))
+            }.frame(width:350)
             
-            NavigationView{
-                VStack(alignment: .center){
-                    Section(header: Text("Add New Key").bold()){
-                        TextField("Bitting ", text: $textBitting)
+            
+            VStack(alignment: .center){
+                Section(header: Text("Add New Key").bold()){
+                    TextField("Bitting ", text: $textBitting)
+                        .padding()
+                        .background(.black.opacity(0.1))
+                        .frame(width:350)
+                        .border(.blue.opacity(0.8))
+                    
+                    HStack{
+                        TextField("Keyway ", text: $textKeyway)
                             .padding()
-                        HStack{
-                            TextField("Keyway ", text: $textKeyway)
-                                .padding()
-                            TextField("Unit ", text: $textUnit)
-                                .padding()
-                        }
-                        HStack{
-                            Spacer()
-                            Button(action: {
-                                self.addToList()
-                            }, label: {
-                                Text("Add")
-                                    .bold()
-                                    .frame(width: 100, height: 50, alignment: .center)
-                                    .background(Color.cyan)
-                                    .cornerRadius(8)
-                                    .foregroundColor(Color.black)
-                            })
+                            .background(.black.opacity(0.1))
+                            .border(.blue.opacity(0.8))
                             
-                            Spacer()
-                            Button(action: {
-                                self.export()
-                                //Add Code here to export variables to
-                                //database
-                            }, label: {
-                                Text("Export")
-                                    .bold()
-                                    .frame(width: 100, height: 50, alignment: .center)
-                                    .background(Color.cyan)
-                                    .cornerRadius(8)
-                                    .foregroundColor(Color.black)
-                            })
-                            Spacer()
-                        }
+                        
+                        TextField("Unit ", text: $textUnit)
+                            .padding()
+                            .background(.black.opacity(0.1))
+                            .border(.blue.opacity(0.8))
+                    }.frame(width:350)
+                    
+                    
+                    HStack{
+                        Spacer()
+                        Button(action: {
+                            self.addToList()
+                        }, label: {
+                            Text("Add")
+                                .bold()
+                                .frame(width: 150, height: 50, alignment: .center)
+                                .background(.blue)
+                                .cornerRadius(15)
+                                .foregroundColor(.white)
+                        })
+                        
+                        Spacer()
+                        Button(action: {
+                            self.export()
+                            //Add Code here to export variables to database
+                        }, label: {
+                            Text("Export")
+                                .bold()
+                                .frame(width: 150, height: 50, alignment: .center)
+                                .background(.blue)
+                                .cornerRadius(15)
+                                .foregroundColor(.white)
+                        })
+                        Spacer()
                     }
-                    List{
-                        ForEach(viewModel.locks){ lock in
-                            LockRow(
-                                unitNum: lock.bitting,
-                                keyWay: lock.unitNum,
-                                bitting: lock.keyWay)
-                        }
+                }
+                List{
+                    ForEach(viewModel.locks){ lock in
+                        LockRow(
+                            unitNum: lock.bitting,
+                            keyWay: lock.unitNum,
+                            bitting: lock.keyWay)
                     }
-                }.navigationBarTitle("")
-                 .navigationBarHidden(true)
+                }
             }
-        }
+        }.offset(x:0, y:65)
+         .background(Image("Background")
+            .resizable()
+            .scaledToFill()
+            .clipped()
+            .opacity(0.25))
+            .edgesIgnoringSafeArea([.top])
     }
+    
     func addToList(){
         guard !textBitting.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
@@ -185,10 +221,11 @@ struct LockRow: View{
     }
 }
 
-/*
+
 struct AddLockView_Previews: PreviewProvider {
     static var previews: some View {
         AddLockView()
     }
 }
- */
+
+
