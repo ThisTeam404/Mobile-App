@@ -183,7 +183,7 @@ struct createJob: View {
                                 changePins1 = someKeyGenerator1.getChangePins()
                                 
                                 someKeyGenerator1.generateMasterPins() //step 4
-                                masterPins1 = someKeyGenerator1.getMasterPins()
+                                masterPins1 = someKeyGenerator1.getMasterPins1()
                             }
                             else
                             {
@@ -383,28 +383,46 @@ class keyGenerator {
     private var hasHigherLevelMK:Bool
     private var changeKeys = [String]()
     private var changePins = [String]()
-    private var masterPins = [String]() //rename to masterPins1
+    private var masterPins1 = [String]() 
     private var masterPins2 = [String]()
     private var subMasterKeys = [String]()
     private var allKeys = [String]()
-    private var GMKSystem = keyGenerator(keyway: "SC1", numChangeKeys: 0, masterKeyLevel: 0)
+    private var GMK:String
+    private var GMKAllKeys = [String]()
 
     /*constructor: generate change keys w/ a master key*/
-    init(keyway:String, numChangeKeys:Int, masterKeyLevel:Int, numSubMasterKeys: Int = 0, hasHigherLevelMK: Bool = false, GMKSystem: keyGenerator? = nil) {
+    init(keyway:String, numChangeKeys:Int, masterKeyLevel:Int, numSubMasterKeys: Int = 0) {
         masterKey = ""
         self.numChangeKeys = numChangeKeys
         self.keyway = keyway
         self.masterKeyLevel = masterKeyLevel
-        self.numSubMasterKeys = numSubMasterKeys 
-        self.hasHigherLevelMK = hasHigherLevelMK
-        self.GMKSystem = GMKSystem!
+        self.numSubMasterKeys = numSubMasterKeys
         changeKeys = [String](repeating: "", count: numChangeKeys)
         changePins = [String](repeating: "", count: numChangeKeys)
-        masterPins = [String](repeating: "", count: numChangeKeys)
+        masterPins1 = [String](repeating: "", count: numChangeKeys) //JIRA
         masterPins2 = [String](repeating: "", count: numChangeKeys)
         subMasterKeys = [String](repeating: "", count: numSubMasterKeys)
+        hasHigherLevelMK = false 
+        GMK = "" 
+        GMKAllKeys = [""] 
     }
 
+/*second constructor: for sub master keys*/
+    init(keyway:String, numChangeKeys:Int, masterKeyLevel:Int, numSubMasterKeys: Int, hasHigherLevelMK: Bool, GMKSystem: keyGenerator) {
+        masterKey = ""
+        self.numChangeKeys = numChangeKeys
+        self.keyway = keyway
+        self.masterKeyLevel = masterKeyLevel
+        self.numSubMasterKeys = numSubMasterKeys
+        self.hasHigherLevelMK = hasHigherLevelMK
+        changeKeys = [String](repeating: "", count: numChangeKeys)
+        changePins = [String](repeating: "", count: numChangeKeys)
+        masterPins1 = [String](repeating: "", count: numChangeKeys)
+        masterPins2 = [String](repeating: "", count: numChangeKeys)
+        subMasterKeys = [String](repeating: "", count: numSubMasterKeys)
+        GMK = GMKSystem.getMasterKey()
+        GMKAllKeys = GMKSystem.getAllKeys()
+    }
     func setMasterKey(masterKey:String) {
         if((masterKey.count == combinationLength) && (checkMACSValue(key: masterKey))) {
             var currCut:Int, currIndex:String.Index, prevCut:Int, prevIndex:String.Index
@@ -459,9 +477,8 @@ class keyGenerator {
         return changePins
     }
     
-    //change to masterPins1
-    func getMasterPins() -> [String] {
-        return masterPins
+    func getMasterPins1() -> [String] {
+        return masterPins1
     }
     
     func getMasterPins2() -> [String] {
@@ -751,17 +768,13 @@ class keyGenerator {
             //generate the change keys
             for i in 0..<numChangeKeys {
                 randomCK = Int.random(in: 0..<(allViableKeys.count))
-                if (masterKeyLevel == 2) {
-                    while(GMKSystem.getAllKeys().contains(String(allViableKeys[randomCK]))) {
+                if (hasHigherLevelMK == true) {
+                    while(GMKAllKeys.contains(String(allViableKeys[randomCK]))) { 
                         randomCK = Int.random(in: 0..<(allViableKeys.count))
                     }
                 }
                 changeKeys[i] = String(allViableKeys[randomCK])
                 allViableKeys.remove(at: randomCK)
-                
-                if(hasHigherLevelMK == true) {
-                    GMKSystem.appendToAllKeys(newKey: changeKeys[i])
-                }
             }
         }
         //if system has no MK, generate random bittings
@@ -856,8 +869,8 @@ class keyGenerator {
                         smallestCut = mkCut
                     }
                     if(hasHigherLevelMK == true) {
-                        gmkIndex = (GMKSystem.getMasterKey()).index((changeKeys[i]).startIndex, offsetBy: j)
-                        gmkCut = Int(GMKSystem.getMasterKey()[gmkIndex...gmkIndex]) ?? 0
+                        gmkIndex = GMK.index(GMK.startIndex, offsetBy: j)
+                        gmkCut = Int(GMK[gmkIndex...gmkIndex]) ?? 0 
                         if(gmkCut < smallestCut) {
                             smallestCut = gmkCut
                         }
@@ -902,8 +915,8 @@ class keyGenerator {
                     masterPin2 += "0"
                 }
                 else {
-                    gmkCutIndex = (GMKSystem.getMasterKey()).index(masterKey.startIndex, offsetBy: j)
-                    gmkCut = Int(GMKSystem.getMasterKey()[gmkCutIndex...gmkCutIndex]) ?? 0
+                    gmkCutIndex = GMK.index(GMK.startIndex, offsetBy: j)
+                    gmkCut = Int(GMK[gmkCutIndex...gmkCutIndex]) ?? 0 
                     
                     currentCuts.append(ckCut)
                     currentCuts.append(mkCut)
@@ -919,7 +932,7 @@ class keyGenerator {
                     currentCuts.removeAll()
                 }
             }
-            masterPins[i] = masterPin1 
+            masterPins1[i] = masterPin1 
             masterPins2[i] = masterPin2 
         }
     }
