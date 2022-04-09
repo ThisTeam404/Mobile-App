@@ -41,7 +41,7 @@ class JobDetails: ObservableObject, Codable{
 }
 
 struct JobDetailsView: View {
-    
+    @State var jobNotes: String = "N/A"
     @ObservedObject var details: JobDetails
     
     var body: some View {
@@ -88,7 +88,7 @@ struct JobDetailsView: View {
                     .multilineTextAlignment(.center)
                 
                 ZStack{
-                    TextEditor(text: $details.jobNotes)
+                    TextEditor(text: $jobNotes)
                         .border(.blue)
                         .frame(width: 350, height: 385)
                     
@@ -100,7 +100,7 @@ struct JobDetailsView: View {
                 
                 Button("Export"){
                     Task{
-                    
+                        details.jobNotes=jobNotes
                         await export()
                     }
                 }.padding()
