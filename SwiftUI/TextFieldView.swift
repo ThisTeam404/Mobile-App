@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct TextFieldView: View {
     @State private var apiKey = ""
     
     var body: some View {
@@ -25,7 +25,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        TextFieldView()
     }
 }
 
