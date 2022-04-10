@@ -2,7 +2,6 @@ CREATE TABLE JOB (
 	jobID int NOT NULL AUTO_INCREMENT,
 	jobdate datetime DEFAULT CURRENT_TIMESTAMP,
 	numkeys int,
-	numlocks int,
 	cost dec(7,2),
 	address varchar(100),
 	notes varchar(100),
@@ -39,7 +38,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON KEYLOCK.* TO 'owner';
 
 
 INSERT INTO JOB
-VALUES (9876, '2022-12-01', 1, 1, 500.00, '1234 random blvd', 'beware of dog');
+VALUES (9876, '2022-12-01', 1, 500.00, '1234 random blvd', 'beware of dog');
 
 INSERT INTO KEYLOCK
 VALUES (9876, 01010, 001, 'KW1', 'Sac State Dorm', 'Room 191', 'CK', true, 38424, 00001, 00002, 01010, 9876);
