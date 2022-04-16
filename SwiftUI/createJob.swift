@@ -2,7 +2,7 @@
 //  createJob.swift
 //  GoogleLoginOption
 //
-//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/3/22.
+//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/15/22.
 //
 
 import SwiftUI
@@ -11,21 +11,35 @@ import SwiftUI
 struct numCombo: Identifiable{
     var id = UUID()
     @State var numKeys: String
-    var combination: [String]
-    var combinationPins: [String]
+    var combination = [[String]]()
+    var combinationPins = [[String]]()
     var keyWayType = ""
     var hasMk: Bool = false
-    var masterKey: String
-    var masterPins: [String]
+    var masterKeyLevel: String
+    var masterKey: [String]
+    var masterPins1 = [[String]]()
+    var masterPins2 = [[String]]()
+    var subMasterKeys = [String]()
 }
 
 class numComboViewModel: ObservableObject{
 
-    @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [""], combinationPins: [""], keyWayType: "", hasMk: false, masterKey: "", masterPins: [""])]
+    @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [[""]], combinationPins: [[""]], keyWayType: "", hasMk: false, masterKeyLevel: "", masterKey: [""], masterPins1: [[""]], masterPins2: [[""]], subMasterKeys: [""])]
 
 }
 
 struct createJob: View {
+    @State var nSubMK = ""                          //this varaible is the textfield the user needs for the submaster key
+    @State var numSubMKeys: [String] = []           //this variable makes a number of textfields appear
+    @State var numberSMK: [String] = []
+    @State var numSubmasterKeys: [String] = []
+    @State var counter = 1
+    
+    
+    
+    @State var flagE = false
+    @State var errorMessage = ""
+    
     
     @State var kwiksetFlag = false
     @State var schlageFlag = false
@@ -42,7 +56,7 @@ struct createJob: View {
     @ObservedObject var viewModel = numComboViewModel()
     
     @State var numChangeKeysText = ""
-    @State var masterKeyLevelValue = "0"
+    @State var masterKeyLevelValue = "0"                //master key level
     @State var keywayVariable = ""
  
     @State var bottomPinsText = ""
@@ -52,319 +66,508 @@ struct createJob: View {
     
     @State var someKeyGenerator1 = keyGenerator(keyway: "", numChangeKeys: 0, masterKeyLevel: 0)
     
-    @State var changeKey1 = [""]
-    @State var changePins1 = [""]
-    @State var masterKey1 = ""
-    @State var masterPins1 = [""]
+    @State var changeKey1 = [[String]]()
+    @State var changePins1 = [[String]]()
+    @State var masterKey1 = [String]()
+    @State var masterPins1 = [[String]]()
+    @State var masterPins2 = [[String]]()
     
     
+    @State var viewNum = 0                              //viewNum will be used depending on which master key level is used.
     var body: some View {
-      
-        //NavigationView{
-        
-            ZStack{
-        
-                VStack{
-                    //.navigationBarTitle(Text("LockThatDown"))
-                    
+        ZStack{
+            VStack{
+                HStack{ //Component 1 Start
                     Spacer()
-                    //Text("Create Job")
-                    
-                    HStack{
-                        
-                        Spacer()
-                       
-                        Text("Keyway Type")
-                            .padding()
-                        
-                        Spacer()
-                        if(!schlageFlag)
-                        {
-                            Button("Schlage", action:{schlageFlag = true;
-                                kwiksetFlag = false; keyWayFlag = false
-                                keywayVariable = "SC1"
-                            })
-                                .padding()
-                                .frame(height: 25)
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .cornerRadius(8)
-                                .disabled(schlageFlag)
-                        }
-                        else
-                        {
-                            Button("Schlage", action:{})
-                                .padding()
-                                .frame(height: 25)
-                                .foregroundColor(.blue)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .border(Color.blue, width: 2)
-                            
-                        }
-                    
-                        Spacer()
-                        
-                        if(!kwiksetFlag)
-                        {
-                            Button("Kwikset", action:{schlageFlag = false;
-                                kwiksetFlag = true;keyWayFlag = false
-                                keywayVariable = "KW1"
-                            }).disabled(kwiksetFlag)
-                                .padding()
-                                .frame(height: 25)
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .cornerRadius(8)
-                                .disabled(kwiksetFlag)
-                        }
-                        else
-                        {
-                            Button("Kwikset", action:{})
-                                .padding()
-                                .frame(height: 25)
-                                .foregroundColor(.blue)
-                                .background(.white)
-                                .cornerRadius(8)
-                                .border(Color.blue, width: 2)
-                            
-                        }
-   
-                        
-                        Spacer()
-                    
-                    }.offset(y:60)
-
-                    VStack{
-                        TextField("Number of Change Keys", text: $numChangeKeysText)
-                            .padding()
-                            .frame(width: 300)
-                            .border(.blue)
-                            .background(.black.opacity(0.1))
-                        HStack{
-                        Menu{
-                            Button("0", action: {masterKeyLevelValue = "0"
-                                isOn = false
-                            })
-                            Button("1", action: {masterKeyLevelValue = "1"
-                                isOn = true
-                            })
-                        } label: {
-                            Label("Master Key Levels", systemImage: "chevron.down")}
-                        
-                        Text(masterKeyLevelValue)
-                        }
-                        
-                        if(kwiksetFlag || schlageFlag)
-                        {
-                        Button("Generate", action:{
-                            confirmFlag2 = true
-                            guard Int(numChangeKeysText) != nil else {
-                                confirmFlag2 = false
-                                return}
-
-                            guard Int(numChangeKeysText)! > 0  else {
-                                confirmFlag2 = false
-                                return}
-                            
-                            
-                            
-                            someKeyGenerator1 = keyGenerator(keyway: keywayVariable, numChangeKeys: Int(numChangeKeysText) ?? 1, masterKeyLevel: Int(masterKeyLevelValue) ?? 0)
-                            
-                            if(isOn)
-                            {
-                                someKeyGenerator1.generateMasterKey() //step 1
-                                masterKey1 = someKeyGenerator1.getMasterKey()
-                                
-                                someKeyGenerator1.generateChangeKeys() //step 2
-                                changeKey1 = someKeyGenerator1.getChangeKeys()
-
-                                someKeyGenerator1.generateChangePins() //step 3
-                                changePins1 = someKeyGenerator1.getChangePins()
-                                
-                                someKeyGenerator1.generateMasterPins() //step 4
-                                masterPins1 = someKeyGenerator1.getMasterPins1()
-                            }
-                            else
-                            {
-                                someKeyGenerator1.generateChangeKeys()
-                                changeKey1 = someKeyGenerator1.getChangeKeys()
-
-                                someKeyGenerator1.generateChangePins()
-                                changePins1 = someKeyGenerator1.getChangePins()
-                            }
+                    Text("Keyway Type").padding()
+                    Spacer()
+                    if(!schlageFlag)
+                    {
+                        Button("Schlage", action:{schlageFlag = true;
+                            kwiksetFlag = false; keyWayFlag = false
+                            keywayVariable = "SC1"
                         })
-                            .frame(width: 250, height: 35, alignment: .center)
+                            .padding()
+                            .frame(height: 25)
+                            .foregroundColor(.white)
+                            .background(.blue)
+                            .cornerRadius(8)
+                            .disabled(schlageFlag)
+                    }
+                    else
+                    {
+                        Button("Schlage", action:{})
+                            .padding()
+                            .frame(height: 25)
+                            .foregroundColor(.blue)
+                            .background(.white)
+                            .cornerRadius(8)
+                            .border(Color.blue, width: 2)
+                        
+                    }
+                
+                    Spacer()
+                    
+                    if(!kwiksetFlag)
+                    {
+                        Button("Kwikset", action:{schlageFlag = false;
+                            kwiksetFlag = true;keyWayFlag = false
+                            keywayVariable = "KW1"
+                        }).disabled(kwiksetFlag)
+                            .padding()
+                            .frame(height: 25)
+                            .foregroundColor(.white)
+                            .background(.blue)
+                            .cornerRadius(8)
+                            .disabled(kwiksetFlag)
+                    }
+                    else
+                    {
+                        Button("Kwikset", action:{})
+                            .padding()
+                            .frame(height: 25)
+                            .foregroundColor(.blue)
+                            .background(.white)
+                            .cornerRadius(8)
+                            .border(Color.blue, width: 2)
+                        
+                    }
+                    Spacer()
+                } //Component 1 End
+                HStack{ //Component 2 Start
+                    Menu{
+                        Button("0", action: {masterKeyLevelValue = "0"
+                            isOn = false
+                            numSubmasterKeys.removeAll()
+                            nSubMK = ""
+                        })
+                        Button("1", action: {masterKeyLevelValue = "1"
+                            numSubmasterKeys.removeAll()
+                            isOn = true
+                            nSubMK = ""
+                        })
+                        Button("2", action: {masterKeyLevelValue = "2"
+                            isOn = true
+                        })
+                    } label: {
+                        Label("Master Key Levels", systemImage: "chevron.down")}
+                    Text(masterKeyLevelValue)
+                } //Compoenent 2 End
+                //Component 3 Start
+                TextField("Number of Change Keys", text: $numChangeKeysText)
+                    .padding()
+                    .frame(width: 300)
+                    .border(.blue)
+                    .background(/*.black.opacity(0.1)*/ .white)
+                //Component 3 End
+                if(masterKeyLevelValue == "2") //Component 4 Start
+                {
+                    TextField("Number of Submaster Keys", text: $nSubMK)
+                        .padding()
+                        .frame(width: 300)
+                        .border(.blue)
+                        .background(/*.black.opacity(0.1)*/ .white)
+                    HStack{
+                        Button(action: {
+                            guard Int(nSubMK) != nil else {
+                                nSubMK = ""
+                                errorMessage = "A number was not entered in the sub master keys textfield properly. Please enter a positive integer number."
+                                flagE = true
+                                return}
+
+                            guard Int(nSubMK)! > 0  else {
+                                nSubMK = ""
+                                errorMessage = "The number entered in change keys sub master is below one. Please enter a positive integer number."
+                                flagE = true
+                                return}
+                            for _ in 1...(Int(nSubMK) ?? 1)
+                            {
+                                self.numSubmasterKeys.append("")
+                            }
+                            self.counter = counter + (Int(nSubMK) ?? 1)
+                        }){Text("Add Combo")}
+                            .frame(width: 175, height: 35, alignment: .center)
                             .background(Color.blue)
                             .cornerRadius(8)
                             .foregroundColor(Color.white)
-                            .disabled(keyWayFlag)
-                        }
-                        else{
-                            Button("Generate", action:{})
-                                .frame(width: 250, height: 35, alignment: .center)
-                                .background(Color.white)
-                                .cornerRadius(8)
-                                .foregroundColor(Color.blue)
-                                .disabled(keyWayFlag)
-                                .border(Color.blue, width: 2)
-                        }
+                            .alert(isPresented: $flagE) {Alert(title: Text("Error Message"), message: Text(errorMessage), dismissButton: .default(Text("OK")))}
                         
-                     
-                        HStack{
-                            
-                            Spacer()
-            
-                            if(confirmFlag2)
-                            {
-                            Button(action: {
-                                if(!flag)
-                                {
-                                    flag = true
-                                    viewModel.numCombos.removeAll()
-                                }
-                                
-                                
-                                if(kwiksetFlag == false && schlageFlag == false)
-                                {
-                                    keyWayFlag = true
-                                }
-                                else
-                                {
-                                    self.addToList()
-                                    confirmFlag2 = false
-                                }}, label: {Text("Confirm")})
-                                .padding()
-                                .frame(width: 175, height: 35)
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .cornerRadius(8)
-                            }
-                            else
-                            {
-                                Button("Confirm", action:{})
-                                    .frame(width: 175, height: 35, alignment: .center)
-                                    .background(.blue)
-                                    .foregroundColor(.white)
-                                    .disabled(confirmFlag2)
-                                    .border(Color.blue, width: 2)
-                                    .cornerRadius(8)
-                            }
-              
-                            
-                            Spacer()
-                           
-                            Button(action: {
-                                keyWayFlag = false
-                                confirmFlag2 = false
-                                schlageFlag = false
-                                kwiksetFlag = false
-                                keywayVariable = ""
-                                numberOfLocksCombos = 1
-                                numChangeKeysText = ""
-                                masterKeyLevelValue = "0"
-                            }, label: {Text("Reset")})
-                                .padding()
-                                .frame(width: 175, height: 35)
-                                .foregroundColor(.white)
-                                .background(.blue)
-                                .cornerRadius(8)
-                  
-             
-                            Spacer()
-                        }
-                        
-                        
-                    }.offset(y:50)
-                    Spacer()
-                    HStack{
-                        Text("# Key")
-                        Text("Key combo #")
-                        Text("Key Pins #")
-                        Text("Key Type")
-                        Text("Is MK")
-                        Text("Master combo #")
-                        Text("M Pins")
-                    }.offset(y:45)
-                    List{
-                        
-                        if(flag)
-                        {
-                        ForEach(viewModel.numCombos){ num in
-                            
-                            numComboRow(numKeys: num.numKeys,
-                                        combo: String(num.combination.joined(separator: ", ")),
-                                        comboPins: String(num.combinationPins.joined(separator: ", ")),
-                                        keyWay: num.keyWayType,
-                                        hasMKValue: String(num.hasMk),
-                                        masterKey: String(num.masterKey),
-                                        masterPins: String(num.masterPins.joined(separator: ", ")))
-                        }
-                        }
-                        
-                    }.offset(y:35)
-                    HStack{
-                        
-                        Spacer()
-                        
-                        Button("Confirm",action: {
-                            confirmFlag = true
-                        }).padding()
-                            .frame(width: 175, height: 35)
-                            .foregroundColor(.white)
-                            .background(.blue)
-                            .cornerRadius(8)
-                            .alert(isPresented: $confirmFlag) {Alert(title: Text("Confirmation"), message: Text("Do you want to save the job information to the Add Lock page?"), primaryButton: .default(Text("Yes"), action: {print("Confirm test")}), secondaryButton: .cancel(Text("No")))}
-              
-                        Spacer()
-                        
-                        Button("Cancel", action: {
-                            cancelFlag = true
-                        })
-                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
-                                keywayVariable = ""
-                                kwiksetFlag = false
-                                schlageFlag = false
-                                confirmFlag2 = false
-                                keyWayFlag = true
-                                viewModel.numCombos.removeAll()
-                                numberOfLocksCombos = 1
-                                numChangeKeysText = ""
-                                masterKeyLevelValue = "0"
-                            }), secondaryButton: .cancel(Text("No")))}
+                        Button(action: {
+                            numSubmasterKeys.removeAll()
+                        }, label: {Text("Reset")})
                             .padding()
                             .frame(width: 175, height: 35)
                             .foregroundColor(.white)
                             .background(.blue)
                             .cornerRadius(8)
-    
-                        Spacer()
-                    }.frame(height:110)
+                    }
+                    
+                    //List{
+                        ScrollView{
+                            VStack{
+                               ForEach(0..<numSubmasterKeys.count, id: \.self) {index in
+                                    TextField("Num Keys for SMKeys", text: self.$numSubmasterKeys[index])
+                                       .padding()
+                                       .frame(width: 300)
+                                       .border(.blue)
+                                       .background(/*.black.opacity(0.1)*/ .white)
+                                }
+                           }
+                        }
+                    //}
+                }//Component 4 End
+                if(kwiksetFlag || schlageFlag)//Component 5 Start
+                {
+                    Button("Generate", action:{
+                        confirmFlag2 = true
+                        guard Int(numChangeKeysText) != nil else {
+                            confirmFlag2 = false
+                            numChangeKeysText = ""
+                            errorMessage = "A number was not entered in the change keys textfield properly. Please enter a positive integer number."
+                            flagE = true
+                            return}
+
+                        guard Int(numChangeKeysText)! > 0  else {
+                            confirmFlag2 = false
+                            numChangeKeysText = ""
+                            errorMessage = "The number entered change keys textfield is below one. Please enter a positive integer number."
+                            flagE = true
+                            return}
                         
-                    Spacer()
+                        someKeyGenerator1 = keyGenerator(keyway: keywayVariable, numChangeKeys: Int(numChangeKeysText) ?? 1, masterKeyLevel: Int(masterKeyLevelValue) ?? 0)
+                    
+                         if(masterKeyLevelValue == "1")
+                         {
+                            
+                             numberSMK.removeAll()
+                             masterKey1.removeAll()
+                             changeKey1.removeAll()
+                             changePins1.removeAll()
+                             masterPins1.removeAll()
+                             masterPins2.removeAll()
+                             
+                             
+                             someKeyGenerator1.generateMasterKey() //step 1
+                             masterKey1.append(someKeyGenerator1.getMasterKey())
+                        
+                             someKeyGenerator1.generateChangeKeys() //step 2
+                             changeKey1.append(someKeyGenerator1.getChangeKeys())
+
+                             someKeyGenerator1.generateChangePins() //step 3
+                             changePins1.append(someKeyGenerator1.getChangePins())
+                        
+                            someKeyGenerator1.generateMasterPins() //step 4
+                             masterPins1.append(someKeyGenerator1.getMasterPins1())
+                        }
+                        else if(masterKeyLevelValue == "2")
+                        {
+                            guard Int(nSubMK) != nil else {
+                                confirmFlag2 = false
+                                nSubMK = ""
+                                errorMessage = "A number was not entered in the submaster keys textfield properly. Please enter a positive integer number."
+                                flagE = true
+                                return}
+
+                            guard Int(nSubMK)! > 0  else {
+                                confirmFlag2 = false
+                                nSubMK = ""
+                                errorMessage = "The number entered in the submaster keys textfield is below one. Please enter a positive integer number."
+                                flagE = true
+                                return}
+                            
+                            someKeyGenerator1 = keyGenerator(keyway: keywayVariable, numChangeKeys: Int(numChangeKeysText) ?? 1, masterKeyLevel: Int(masterKeyLevelValue) ?? 0, numSubMasterKeys: Int(nSubMK) ?? 1)
+
+                            var numChangesKeysForEachSubMKs = [Int]() //put the "string integer" variables from numSubMKeys array to numChangesKrysForEachSubMKs
+                             
+                            for x in 0..<(Int(nSubMK) ?? 1)
+                            {
+                                guard Int(numSubmasterKeys[x]) != nil else {
+                                    confirmFlag2 = false
+                                    errorMessage = "A number was not entered in the number key for sub master key textfield list properly for textfield " + String(x+1) +  "." + " Please enter a positive integer number."
+                                    flagE = true
+                                    return}
+
+                                guard Int(numSubmasterKeys[x])! > 0 else {
+                                    confirmFlag2 = false
+                                    errorMessage = "The number in the number key for sub master key is not a positive number in textfield " + String(x+1) +  "." + " Please enter a positive integer number."
+                                    flagE = true
+                                    return}
+                                 
+                                numChangesKeysForEachSubMKs.append(Int(numSubmasterKeys[x]) ?? 1)
+                            }
+
+                            numberSMK.removeAll()
+                            masterPins2.removeAll()
+                            masterKey1.removeAll()
+                            changeKey1.removeAll()
+                            changePins1.removeAll()
+                            masterPins1.removeAll()
+                            
+                            
+                            someKeyGenerator1.generateMasterKey() //step 1
+
+                            someKeyGenerator1.generateChangeKeys() //step 2
+                             
+                            someKeyGenerator1.generateChangePins() //step 3
+                             
+                            someKeyGenerator1.generateMasterPins() //step 4
+
+                            someKeyGenerator1.generateSubMasterKeys() //step 5
+                             
+                            masterPins2.append(someKeyGenerator1.getMasterPins2())
+                            masterKey1.append(someKeyGenerator1.getMasterKey())
+                            changeKey1.append(someKeyGenerator1.getChangeKeys())
+                            changePins1.append(someKeyGenerator1.getChangePins())
+                            masterPins1.append(someKeyGenerator1.getMasterPins1())
+                            
+                            let subMasterKeys = someKeyGenerator1.getSubMasterKeys()
+                            //each sub masterkey will have its own change keys
+                            for i in 0..<someKeyGenerator1.getNumSubMasterKeys() {
+                                 var subMKSystem = keyGenerator(keyway: keywayVariable, numChangeKeys: numChangesKeysForEachSubMKs[i], masterKeyLevel: 2,
+                                     numSubMasterKeys: 0 /*sub MKs dont have subMKs so hardcoded this 0*/,
+                                     hasHigherLevelMK: true /*hardcode this to true*/,
+                                     GMKSystem: someKeyGenerator1 /*pass in the keyGenerator instance*/)
+                                 
+                                 subMKSystem.setMasterKey(masterKey: subMasterKeys[i])
+                                 subMKSystem.generateChangeKeys()
+                                 subMKSystem.generateChangePins()
+                                 subMKSystem.generateMasterPins()
+                                
+                                
+                                 
+                                 let tempCKs = subMKSystem.getChangeKeys()
+
+                                 for j in 0..<subMKSystem.getChangeKeys().count {
+                                     someKeyGenerator1.appendToAllKeys(newKey: tempCKs[j])
+                                 }
+                                
+                                
+                                
+                                
+            
+                                masterPins2.append(subMKSystem.getMasterPins2())
+                                masterKey1.append(subMKSystem.getMasterKey())
+                                changeKey1.append(subMKSystem.getChangeKeys())
+                                changePins1.append(subMKSystem.getChangePins())
+                                masterPins1.append(subMKSystem.getMasterPins1())
+                            }
+                            numberSMK = someKeyGenerator1.getSubMasterKeys()
+                        }
+                        else
+                        {
+                            numberSMK.removeAll()
+                            changeKey1.removeAll()
+                            changePins1.removeAll()
+                            masterPins2.removeAll()
+                            masterKey1.removeAll()
+                            masterPins1.removeAll()
+                            
+                            someKeyGenerator1.generateChangeKeys()
+                            changeKey1.append(someKeyGenerator1.getChangeKeys())
+
+                            someKeyGenerator1.generateChangePins()
+                            changePins1.append(someKeyGenerator1.getChangePins())
+                        }
+                        viewNum = 4
+                        numberOfLocksCombos = someKeyGenerator1.getAllKeys().count
+                    })
+                    .frame(width: 250, height: 35, alignment: .center)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+                    .foregroundColor(Color.white)
+                    .disabled(keyWayFlag)
+                    .alert(isPresented: $flagE) {Alert(title: Text("Error Message"), message: Text(errorMessage), dismissButton: .default(Text("OK")))}
                 }
+                else{
+                    Button("Generate", action:{})
+                        .frame(width: 250, height: 35, alignment: .center)
+                        .background(Color.white)
+                        .cornerRadius(8)
+                        .foregroundColor(Color.blue)
+                        .disabled(keyWayFlag)
+                        .border(Color.blue, width: 2)
+                }//Component 5 End
+                HStack{//Component 6 Start
+                    Spacer()
+                    if(confirmFlag2)
+                    {
+                    Button(action: {
+                        if(!flag)
+                        {
+                            flag = true
+                            viewModel.numCombos.removeAll()
+                        }
+                        
+                        if(kwiksetFlag == false && schlageFlag == false)
+                        {
+                            keyWayFlag = true
+                        }
+                        else
+                        {
+                            if(viewModel.numCombos.count == 1)
+                            {
+                                viewModel.numCombos.remove(at: 0)
+                            }
+                            viewNum = Int(masterKeyLevelValue) ?? 0
+                            self.addToList()
+                            confirmFlag2 = false
+                        }}, label: {Text("Confirm")})
+                        .padding()
+                        .frame(width: 175, height: 35)
+                        .foregroundColor(.white)
+                        .background(.blue)
+                        .cornerRadius(8)
+                    }
+                    else
+                    {
+                        Button("Confirm", action:{})
+                            .frame(width: 175, height: 35, alignment: .center)
+                            .background(.white)
+                            .foregroundColor(.blue)
+                            .disabled(confirmFlag2)
+                            .border(Color.blue, width: 2)
+                            .cornerRadius(8)
+                    }
+      
+                    Spacer()
+                   
+                    Button(action: {
+                        keyWayFlag = false
+                        confirmFlag2 = false
+                        schlageFlag = false
+                        kwiksetFlag = false
+                        keywayVariable = ""
+                        numChangeKeysText = ""
+                        masterKeyLevelValue = "0"
+                    }, label: {Text("Reset")})
+                        .padding()
+                        .frame(width: 175, height: 35)
+                        .foregroundColor(.white)
+                        .background(.blue)
+                        .cornerRadius(8)
+                    Spacer()
+                }//Component 6 End
+                HStack{//Component 7 Start
+                    Text("Key combo #").foregroundColor(Color.red)
+                    Text("Key Pins #").foregroundColor(Color.green)
+                    Text("Master combo #").foregroundColor(Color.blue)
+                    Text("M Pins L1").foregroundColor(Color.orange)
+                    Text("M Pins L2").foregroundColor(Color.brown)
+                }//Component 7 End
+                List{//Component 8 Start
+                    if(flag)
+                    {
+                        ScrollView{
+                            if(viewNum == 2)
+                            {
+                                ForEach(viewModel.numCombos){ num in
+                        
+                                    numComboRow(numKeys: "",
+                                                combo: String(num.combination.joined().joined(separator: ", ")),
+                                                comboPins: String(num.combinationPins.joined().joined(separator: ", ")),
+                                                keyWay: "",
+                                                hasMKValue: String(""), mKeyLevel: "",
+                                                masterKey: String(num.masterKey.joined(separator: ", ")),
+                                                masterPins1: String(num.masterPins1.joined().joined(separator: ", ")),
+                                                masterPins2: String(masterPins2.joined().joined(separator: ", ")),
+                                                subMasterKey: "")
+                                   
+                                }
+                            }
+                            else if(viewNum == 1)
+                            {
+                                ForEach(viewModel.numCombos){ num in
+                        
+                                    numComboRow(numKeys: "",
+                                                combo: String(num.combination.joined().joined(separator: ", ")),
+                                                comboPins: String(num.combinationPins.joined().joined(separator: ", ")),
+                                                keyWay: "",
+                                                hasMKValue: String(""), mKeyLevel: "",
+                                                masterKey: String(num.masterKey.joined(separator: ", ")),
+                                                masterPins1: String(num.masterPins1.joined().joined(separator: ", ")),
+                                                masterPins2: String(""),
+                                                subMasterKey: String(""))
+                                    
+                                }
+                            }
+                            else if(viewNum == 0)
+                            {
+                                ForEach(viewModel.numCombos){ num in
+                        
+                                    numComboRow(numKeys: "",
+                                                combo: String(num.combination.joined().joined(separator: ", ")),
+                                                comboPins: String(""),
+                                                keyWay: "",
+                                                hasMKValue: String(""), mKeyLevel: "",
+                                                masterKey: String(""),
+                                                masterPins1: String(""),
+                                                masterPins2: String(""),
+                                                subMasterKey: String(""))
+                                    
+                                }
+                            }
+                        }
+                    }
                 
-            }.background(Image("Background")
-                .resizable()
-                .scaledToFill()
-                .clipped()
-                .opacity(0.25))
-            .edgesIgnoringSafeArea([.top,.bottom])
-        
-    }
-    
-    func addToList() {
-        if(!isOn)
-        {
-            masterKey1 = "N/A"
-            masterPins1 = ["N/A"]
-            changePins1 = [""]
+                }//Component 8 End
+                HStack{ //Component 9 Start
+                    
+                    Spacer()
+                    
+                    Button("Confirm",action: {
+                        confirmFlag = true
+                    }).padding()
+                        .frame(width: 175, height: 35)
+                        .foregroundColor(.white)
+                        .background(.blue)
+                        .cornerRadius(8)
+                        .alert(isPresented: $confirmFlag) {Alert(title: Text("Confirmation"), message: Text("Do you want to save the job information to the Add Lock page?"), primaryButton: .default(Text("Yes"), action: {print("Confirm test")}), secondaryButton: .cancel(Text("No")))}
+          
+                    Spacer()
+                    
+                    Button("Cancel", action: {
+                        cancelFlag = true
+                    })
+                        .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
+                            keywayVariable = ""
+                            kwiksetFlag = false
+                            schlageFlag = false
+                            confirmFlag2 = false
+                            keyWayFlag = true
+                            viewModel.numCombos.removeAll()
+                            masterPins2.removeAll()
+                            masterKey1.removeAll()
+                            changeKey1.removeAll()
+                            changePins1.removeAll()
+                            masterPins1.removeAll()
+                            numberSMK.removeAll()
+                            numSubmasterKeys.removeAll()
+                            nSubMK = ""
+                            numChangeKeysText = ""
+                            masterKeyLevelValue = "0"
+                        }), secondaryButton: .cancel(Text("No")))}
+                        .padding()
+                        .frame(width: 175, height: 35)
+                        .foregroundColor(.white)
+                        .background(.blue)
+                        .cornerRadius(8)
+
+                    Spacer()
+                }//Component 9 End
+            }
         }
-        let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, keyWayType: keywayVariable, hasMk: isOn, masterKey: masterKey1, masterPins: masterPins1)
-            viewModel.numCombos.append(newCombo)
-        numberOfLocksCombos = numberOfLocksCombos + 1
+        .background(Image("Background")
+            /*.resizable()
+            .scaledToFill()
+            .clipped()
+            .opacity(0.25))
+        .edgesIgnoringSafeArea([.top,.bottom]*/)
     }
-}
+    func addToList() {
+        let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, keyWayType: keywayVariable, hasMk: isOn, masterKeyLevel: masterKeyLevelValue, masterKey: masterKey1, masterPins1: masterPins1, masterPins2: masterPins2, subMasterKeys: numberSMK)
+            viewModel.numCombos.append(newCombo)
+    }
+}//End of Struct View
 
 class keyGenerator {
     private let KW1MACSValue:Int = 4
@@ -383,7 +586,7 @@ class keyGenerator {
     private var hasHigherLevelMK:Bool
     private var changeKeys = [String]()
     private var changePins = [String]()
-    private var masterPins1 = [String]() 
+    private var masterPins1 = [String]()
     private var masterPins2 = [String]()
     private var subMasterKeys = [String]()
     private var allKeys = [String]()
@@ -402,9 +605,9 @@ class keyGenerator {
         masterPins1 = [String](repeating: "", count: numChangeKeys) //JIRA
         masterPins2 = [String](repeating: "", count: numChangeKeys)
         subMasterKeys = [String](repeating: "", count: numSubMasterKeys)
-        hasHigherLevelMK = false 
-        GMK = "" 
-        GMKAllKeys = [""] 
+        hasHigherLevelMK = false
+        GMK = ""
+        GMKAllKeys = [""]
     }
 
 /*second constructor: for sub master keys*/
@@ -769,7 +972,7 @@ class keyGenerator {
             for i in 0..<numChangeKeys {
                 randomCK = Int.random(in: 0..<(allViableKeys.count))
                 if (hasHigherLevelMK == true) {
-                    while(GMKAllKeys.contains(String(allViableKeys[randomCK]))) { 
+                    while(GMKAllKeys.contains(String(allViableKeys[randomCK]))) {
                         randomCK = Int.random(in: 0..<(allViableKeys.count))
                     }
                 }
@@ -870,7 +1073,7 @@ class keyGenerator {
                     }
                     if(hasHigherLevelMK == true) {
                         gmkIndex = GMK.index(GMK.startIndex, offsetBy: j)
-                        gmkCut = Int(GMK[gmkIndex...gmkIndex]) ?? 0 
+                        gmkCut = Int(GMK[gmkIndex...gmkIndex]) ?? 0
                         if(gmkCut < smallestCut) {
                             smallestCut = gmkCut
                         }
@@ -916,7 +1119,7 @@ class keyGenerator {
                 }
                 else {
                     gmkCutIndex = GMK.index(GMK.startIndex, offsetBy: j)
-                    gmkCut = Int(GMK[gmkCutIndex...gmkCutIndex]) ?? 0 
+                    gmkCut = Int(GMK[gmkCutIndex...gmkCutIndex]) ?? 0
                     
                     currentCuts.append(ckCut)
                     currentCuts.append(mkCut)
@@ -932,8 +1135,8 @@ class keyGenerator {
                     currentCuts.removeAll()
                 }
             }
-            masterPins1[i] = masterPin1 
-            masterPins2[i] = masterPin2 
+            masterPins1[i] = masterPin1
+            masterPins2[i] = masterPin2
         }
     }
 }
@@ -944,18 +1147,23 @@ struct numComboRow: View{
     let comboPins: String
     let keyWay: String
     let hasMKValue: String
+    let mKeyLevel: String
     let masterKey: String
-    let masterPins: String
-    
+    let masterPins1: String
+    let masterPins2: String
+    let subMasterKey: String
     var body: some View{
         HStack{
             Text(numKeys)
-            Text(combo)
-            Text(comboPins)
+            Text(combo).foregroundColor(Color.red)
+            Text(comboPins).foregroundColor(Color.green)
             Text(keyWay)
             Text(hasMKValue)
-            Text(masterKey)
-            Text(masterPins)
+            Text(mKeyLevel)
+            Text(masterKey).foregroundColor(Color.blue)
+            Text(masterPins1).foregroundColor(Color.orange)
+            Text(masterPins2).foregroundColor(Color.brown)
+            Text(subMasterKey)
         }
     }
     
