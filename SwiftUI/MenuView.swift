@@ -10,7 +10,12 @@ import SwiftUI
 struct MenuView: View {
     
     @EnvironmentObject var signOutOption: LoginViewModel
+
     @StateObject var details = JobDetails()
+    @StateObject var allInfo = FinalArray()
+    @StateObject var addLockDetails = LocksViewModel()
+    @StateObject var createJobDetails = numComboViewModel()
+    @StateObject var setApiKeyInfo = setApiKey()
     
     var body: some View{
         
@@ -45,7 +50,26 @@ struct MenuView: View {
                 
                 }
                 
-                NavigationLink(destination: createJob(), label: {
+                NavigationLink(destination: ApiView(setApi: setApiKeyInfo), label: {
+                    Text("API")
+                        .bold()
+                        .frame(width: 300, height: 50)
+                        .background(Color.blue)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(15)
+                })
+                
+                
+                NavigationLink(destination: JobDetailsView(details: details), label: {
+                            Text("Job Details")
+                                .bold()
+                                .frame(width: 300, height: 50)
+                                .background(Color.blue)
+                                .foregroundColor(Color.white)
+                                .cornerRadius(15)
+                })
+                    
+                NavigationLink(destination: createJob(viewModel: createJobDetails), label: {
                     Text("Create Job")
                         .bold()
                         .frame(width: 300, height: 50)
@@ -54,7 +78,7 @@ struct MenuView: View {
                         .cornerRadius(15)
                 })
                 
-                NavigationLink(destination: AddLockView(), label: {
+                NavigationLink(destination: AddLockView(viewModel: addLockDetails, details: details), label: {
                     Text("Add Lock")
                         .bold()
                         .frame(width: 300, height: 50)
@@ -62,27 +86,10 @@ struct MenuView: View {
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
                 })
+
                 
-                NavigationLink(destination: JobDetailsView(details: details), label: {
-                    Text("Job Details")
-                        .bold()
-                        .frame(width: 300, height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(15)
-                })
-                
-                NavigationLink(destination: NotesView(), label: {
-                    Text("Notes")
-                        .bold()
-                        .frame(width: 300, height: 50)
-                        .background(Color.blue)
-                        .foregroundColor(Color.white)
-                        .cornerRadius(15)
-                })
-                
-                NavigationLink(destination: Text("Inventory"), label: {
-                    Text("Inventory")
+                NavigationLink(destination: SaveView(jobDetails: details, addLockDetails: addLockDetails, createJobDetails: createJobDetails, apiKeyInfo: setApiKeyInfo, finalInfo: allInfo), label: {
+                    Text("Save Information")
                         .bold()
                         .frame(width: 300, height: 50)
                         .background(Color.blue)
@@ -110,7 +117,7 @@ struct MenuView: View {
                             Image("Logo")
                                 .resizable()
                                 .clipShape(Circle())
-                                .frame(width: 50, height: 50)
+                                .frame(width: 40, height: 40)
                                 .padding()
                                 .offset(x: -30, y: 0)
                                 
@@ -130,9 +137,10 @@ struct MenuView: View {
     }
 }
 
-
+/*
 struct MenuView_Previews: PreviewProvider {
     static var previews: some View {
         MenuView()
     }
 }
+*/
