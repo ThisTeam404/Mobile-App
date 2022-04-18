@@ -9,37 +9,36 @@ import SwiftUI
 
 struct Lock: Identifiable{
     var id = UUID()
-    //let jobTitle: String
-    //let jobDate: String
     let bitting: String
-    //let comment: String
     let keyWay: String
     let unitNum : String
-    //let address: String
-    //let cost: String
+    let mPins: String
 }
 
 class LocksViewModel: ObservableObject{
-    @Published var locks: [Lock] = [Lock( bitting: "", keyWay: "", unitNum: "")]
+    @Published var locks: [Lock] = []
+    @Published var addLockOn: Bool = false
 }
 
 struct AddLockView: View{
-    @StateObject var viewModel = LocksViewModel()
     
-    @State var textName = ""
-    @State var textDate = ""
+    @ObservedObject var viewModel = LocksViewModel()
+    @ObservedObject var details = JobDetails()
+   
+    @State var jobInput: Bool = false
+    
     @State var textBitting = ""
     @State var textComment = ""
     @State var textCost = ""
     @State var textAddress = ""
     @State var textKeyway = ""
-    @State var textMasterKey = ""
+    @State var textMasterPins = ""
     @State var textUnit = ""
     @State var numKeys = 0
     
     
     var body: some View {
-        
+            
         VStack(alignment: .center){
             Spacer()
             
@@ -47,22 +46,7 @@ struct AddLockView: View{
                 .bold()
             
             Spacer()
-            
-            HStack{
-                TextField("Name", text: $textName)
-                    .padding()
-                    .border(.blue.opacity(0.8))
-                    .background(.black.opacity(0.1))
-                
-                TextField("Date", text: $textDate)
-                    .padding()
-                    .border(.blue.opacity(0.8))
-                    .background(.black.opacity(0.1))
-                
-            }.frame(width:350)
-            
-            Spacer()
-            
+  
             HStack{
                 TextField("Cost", text: $textCost)
                     .padding()
@@ -74,11 +58,14 @@ struct AddLockView: View{
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
             }.frame(width:350)
+                .background(Image("Background")
+                    .scaledToFill()
+                    .opacity(0.3))
             
             Spacer()
             
             HStack{
-                TextField("Master Pins", text: $textMasterKey)
+                TextField("Master Pins", text: $textMasterPins)
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
@@ -110,55 +97,51 @@ struct AddLockView: View{
                             .background(.black.opacity(0.1))
                             .border(.blue.opacity(0.8))
                     }.frame(width:350)
-                    
-                    
+                            
+
                     HStack{
-                        Spacer()
+              
                         Button(action: {
                             self.addToList()
                         }, label: {
                             Text("Add")
                                 .bold()
-                                .frame(width: 150, height: 50, alignment: .center)
+                                .frame(width: 175, height: 40, alignment: .center)
                                 .background(.blue)
                                 .cornerRadius(15)
                                 .foregroundColor(.white)
                         })
                         
-                        Spacer()
+
                         Button(action: {
-                            self.export()
-                            //Add Code here to export variables to database
+                            self.new()
                         }, label: {
-                            Text("Export")
+                            Text("New")
                                 .bold()
-                                .frame(width: 150, height: 50, alignment: .center)
+                                .frame(width: 175, height: 40, alignment: .center)
                                 .background(.blue)
                                 .cornerRadius(15)
                                 .foregroundColor(.white)
                         })
-                        Spacer()
                     }
+                        
                 }
                 List{
                     ForEach(viewModel.locks){ lock in
                         LockRow(
-                            unitNum: lock.bitting,
-                            keyWay: lock.unitNum,
-                            bitting: lock.keyWay)
+                            unitNum: lock.unitNum,
+                            keyWay: lock.keyWay,
+                            bitting: lock.bitting,
+                            mPins: lock.mPins
+                        )
                     }
                 }
             }
-        }.offset(x:0, y:65)
-         .background(Image("Background")
-            .resizable()
-            .scaledToFill()
-            .clipped()
-            .opacity(0.25))
-            .edgesIgnoringSafeArea([.top])
+        }
     }
     
     func addToList(){
+        viewModel.addLockOn = true
         guard !textBitting.trimmingCharacters(in: .whitespaces).isEmpty else {
             return
         }
@@ -169,41 +152,49 @@ struct AddLockView: View{
             return
         }
         
-        let newLock = Lock(bitting: textBitting, keyWay: textKeyway, unitNum: textUnit)
+        if(!jobInput){
+            details.jobCost = textCost
+            details.jobAddress = textAddress
+            details.jobNotes = textComment
+            
+            jobInput = true
+        }
+        print(details.jobCost)
+        print(details.jobAddress)
+        
+        let newLock = Lock(bitting: textBitting, keyWay: textKeyway, unitNum: textUnit, mPins: textMasterPins)
         viewModel.locks.append(newLock)
         numKeys=numKeys+1
+        let num = "\(numKeys)"
+        details.numkeys = num
         textUnit=""
         textBitting=""
         textKeyway=""
+        textMasterPins=""
     }
+
     
-    func export(){
-        guard numKeys>0 else {
-            return
-        }
+    func new(){
+        print("clearing")
+        //clear values
+        numKeys = 0
+        details.numkeys = ""
+        textCost = ""
+        details.jobCost = ""
+        textAddress = ""
+        details.jobAddress = ""
+        textMasterPins = ""
         
-        /*
-         *Here's a for loop that loops through every lock added.
-         *I show how you can access each lock's members in the print statements
-         *I also show that these lock members should be tied to job details
-         *provided, if any were provided.
-         */
+        textComment = ""
+        details.jobNotes = ""
+        viewModel.locks.removeAll()
         for lock in viewModel.locks{
             print(lock.keyWay)
             print(lock.bitting)
             print(lock.unitNum)
-            print(textName)
+            print(lock.mPins)
         }
-        
-        //clear values after every export
-        numKeys = 0
-        textName=""
-        textDate=""
-        textCost=""
-        textAddress=""
-        textMasterKey=""
-        textComment=""
-        viewModel.locks.removeAll()
+        print("CLEARED")
     }
 }
 
@@ -211,16 +202,17 @@ struct LockRow: View{
     let unitNum: String
     let keyWay: String
     let bitting: String
+    let mPins: String
     
     var body: some View{
         HStack{
             Text(bitting)
             Text(keyWay)
             Text(unitNum)
+            Text(mPins)
         }
     }
 }
-
 
 struct AddLockView_Previews: PreviewProvider {
     static var previews: some View {
