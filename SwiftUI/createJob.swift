@@ -2,7 +2,7 @@
 //  createJob.swift
 //  GoogleLoginOption
 //
-//  Created by Kaily Estepa, Anthony Herrera, and Saba Taghibeik on 4/15/22.
+//  Created by Saba Taghibeik and Anthony Herrera on 4/3/22.
 //
 
 import SwiftUI
@@ -25,6 +25,8 @@ struct numCombo: Identifiable{
 class numComboViewModel: ObservableObject{
 
     @Published var numCombos: [numCombo] = [numCombo(numKeys: "0", combination: [[""]], combinationPins: [[""]], keyWayType: "", hasMk: false, masterKeyLevel: "", masterKey: [""], masterPins1: [[""]], masterPins2: [[""]], subMasterKeys: [""])]
+    
+    @Published var createJobOn: Bool = false
 
 }
 
@@ -133,7 +135,12 @@ struct createJob: View {
                         
                     }
                     Spacer()
-                } //Component 1 End
+                }.background(Image("Background")
+                   .scaledToFill()
+                   .opacity(0.30))
+                
+                    
+ //Component 1 End
                 HStack{ //Component 2 Start
                     Menu{
                         Button("0", action: {masterKeyLevelValue = "0"
@@ -158,15 +165,16 @@ struct createJob: View {
                     .padding()
                     .frame(width: 300)
                     .border(.blue)
-                    .background(/*.black.opacity(0.1)*/ .white)
+                    .background(.white)
                 //Component 3 End
                 if(masterKeyLevelValue == "2") //Component 4 Start
                 {
                     TextField("Number of Submaster Keys", text: $nSubMK)
                         .padding()
                         .frame(width: 300)
+                        .background(.white)
                         .border(.blue)
-                        .background(/*.black.opacity(0.1)*/ .white)
+                        
                     HStack{
                         Button(action: {
                             guard Int(nSubMK) != nil else {
@@ -201,6 +209,7 @@ struct createJob: View {
                             .background(.blue)
                             .cornerRadius(8)
                     }
+
                     
                     //List{
                         ScrollView{
@@ -305,13 +314,11 @@ struct createJob: View {
                             
                             
                             someKeyGenerator1.generateMasterKey() //step 1
-
                             someKeyGenerator1.generateChangeKeys() //step 2
                              
                             someKeyGenerator1.generateChangePins() //step 3
                              
                             someKeyGenerator1.generateMasterPins() //step 4
-
                             someKeyGenerator1.generateSubMasterKeys() //step 5
                              
                             masterPins2.append(someKeyGenerator1.getMasterPins2())
@@ -340,8 +347,6 @@ struct createJob: View {
                                  for j in 0..<subMKSystem.getChangeKeys().count {
                                      someKeyGenerator1.appendToAllKeys(newKey: tempCKs[j])
                                  }
-                                
-                                
                                 
                                 
             
@@ -453,7 +458,9 @@ struct createJob: View {
                     Text("Master combo #").foregroundColor(Color.blue)
                     Text("M Pins L1").foregroundColor(Color.orange)
                     Text("M Pins L2").foregroundColor(Color.brown)
-                }//Component 7 End
+                }
+                //Component 7 End
+                VStack{
                 List{//Component 8 Start
                     if(flag)
                     {
@@ -510,19 +517,8 @@ struct createJob: View {
                     }
                 
                 }//Component 8 End
-                HStack{ //Component 9 Start
+               //Component 9 Start
                     
-                    Spacer()
-                    
-                    Button("Confirm",action: {
-                        confirmFlag = true
-                    }).padding()
-                        .frame(width: 175, height: 35)
-                        .foregroundColor(.white)
-                        .background(.blue)
-                        .cornerRadius(8)
-                        .alert(isPresented: $confirmFlag) {Alert(title: Text("Confirmation"), message: Text("Do you want to save the job information to the Add Lock page?"), primaryButton: .default(Text("Yes"), action: {print("Confirm test")}), secondaryButton: .cancel(Text("No")))}
-          
                     Spacer()
                     
                     Button("Cancel", action: {
@@ -547,26 +543,29 @@ struct createJob: View {
                             masterKeyLevelValue = "0"
                         }), secondaryButton: .cancel(Text("No")))}
                         .padding()
-                        .frame(width: 175, height: 35)
+                        .frame(width: 300, height: 35)
                         .foregroundColor(.white)
                         .background(.blue)
                         .cornerRadius(8)
-
-                    Spacer()
-                }//Component 9 End
+//comp 9 end
+                }.background(Image("Background")
+                    .scaledToFill()
+                    .opacity(0.30))//VSTACK
             }
+               
         }
-        .background(Image("Background")
-            /*.resizable()
-            .scaledToFill()
-            .clipped()
-            .opacity(0.25))
-        .edgesIgnoringSafeArea([.top,.bottom]*/)
+       
     }
+    
     func addToList() {
+        
+        viewModel.createJobOn = true
+        
         let newCombo = numCombo(numKeys: String(numberOfLocksCombos), combination: changeKey1, combinationPins: changePins1, keyWayType: keywayVariable, hasMk: isOn, masterKeyLevel: masterKeyLevelValue, masterKey: masterKey1, masterPins1: masterPins1, masterPins2: masterPins2, subMasterKeys: numberSMK)
+            
             viewModel.numCombos.append(newCombo)
     }
+    
 }//End of Struct View
 
 class keyGenerator {
@@ -1168,8 +1167,11 @@ struct numComboRow: View{
     }
     
 }
+/*
 struct CreateJobView_Previews: PreviewProvider {
     static var previews: some View {
-        createJob()
+        createJob(viewModel: <#numComboViewModel#>)
     }
 }
+
+*/
