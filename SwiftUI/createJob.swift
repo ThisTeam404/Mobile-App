@@ -548,9 +548,7 @@ struct createJob: View {
                         .background(.blue)
                         .cornerRadius(8)
 //comp 9 end
-                }.background(Image("Background")
-                    .scaledToFill()
-                    .opacity(0.30))//VSTACK
+                }//VSTACK
             }
                
         }
