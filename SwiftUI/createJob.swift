@@ -338,14 +338,22 @@ struct createJob: View {
                                  someKeyGenerator1.generateMasterKey() //step 1
                                  masterKey1.append(someKeyGenerator1.getMasterKey())
                             
-                                 someKeyGenerator1.generateChangeKeys() //step 2
-                                 changeKey1.append(someKeyGenerator1.getChangeKeys())
+                                 var areCKGenerated:Bool
+                                 areCKGenerated = someKeyGenerator1.generateChangeKeys() //step 2
+                                
+                                 if(areCKGenerated == true) {
+                                     changeKey1.append(someKeyGenerator1.getChangeKeys())
 
-                                 someKeyGenerator1.generateChangePins() //step 3
-                                 changePins1.append(someKeyGenerator1.getChangePins())
-                            
-                                someKeyGenerator1.generateMasterPins() //step 4
-                                 masterPins1.append(someKeyGenerator1.getMasterPins1())
+                                     someKeyGenerator1.generateChangePins() //step 3
+                                     changePins1.append(someKeyGenerator1.getChangePins())
+                                
+                                    someKeyGenerator1.generateMasterPins() //step 4
+                                     masterPins1.append(someKeyGenerator1.getMasterPins1())
+                                 }
+                                 else {
+                                     errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
+                                     flagE = true
+                                 }
                             }
                             else if(masterKeyLevelValue == "2")
                             {
@@ -391,53 +399,71 @@ struct createJob: View {
                                 changePins1.removeAll()
                                 masterPins1.removeAll()
                                 
-                                
                                 someKeyGenerator1.generateMasterKey() //step 1
+                                someKeyGenerator1.setNumCKsForEachSubMKs(numCKsForEachSubMks: numChangesKeysForEachSubMKs)
                                 someKeyGenerator1.generateSubMasterKeys() //step 5 (2)
                                 
-                                someKeyGenerator1.generateChangeKeys() //step 2 (3)
-                                 
-                                someKeyGenerator1.generateChangePins() //step 3 (4)
-                                 
-                                someKeyGenerator1.generateMasterPins() //step 4  (5)
-                                //someKeyGenerator1.generateSubMasterKeys() //step 5
-                                 
-                                masterPins2.append(someKeyGenerator1.getMasterPins2())
-                                masterKey1.append(someKeyGenerator1.getMasterKey())
-                                changeKey1.append(someKeyGenerator1.getChangeKeys())
-                                changePins1.append(someKeyGenerator1.getChangePins())
-                                masterPins1.append(someKeyGenerator1.getMasterPins1())
-                                
-                                let subMasterKeys = someKeyGenerator1.getSubMasterKeys()
-                                //each sub masterkey will have its own change keys
-                                for i in 0..<someKeyGenerator1.getNumSubMasterKeys() {
-                                     var subMKSystem = keyGenerator(keyway: keywayVariable, numChangeKeys: numChangesKeysForEachSubMKs[i], masterKeyLevel: 2,
-                                         numSubMasterKeys: 0 /*sub MKs dont have subMKs so hardcoded this 0*/,
-                                         hasHigherLevelMK: true /*hardcode this to true*/,
-                                         GMKSystem: someKeyGenerator1 /*pass in the keyGenerator instance*/)
-                                     
-                                     subMKSystem.setMasterKey(masterKey: subMasterKeys[i])
-                                     subMKSystem.generateChangeKeys()
-                                     subMKSystem.generateChangePins()
-                                     subMKSystem.generateMasterPins()
-                                    
-                                    
-                                     
-                                     let tempCKs = subMKSystem.getChangeKeys()
+                                var areCKGenerated:Bool
+                                areCKGenerated = someKeyGenerator1.generateChangeKeys() //step 2 (3)
 
-                                     for j in 0..<subMKSystem.getChangeKeys().count {
-                                         someKeyGenerator1.appendToAllKeys(newKey: tempCKs[j])
-                                     }
+                                if(areCKGenerated == true) {
+                                    someKeyGenerator1.generateChangePins() //step 3 (4)
+                                     
+                                    someKeyGenerator1.generateMasterPins() //step 4  (5)
+                                    //someKeyGenerator1.generateSubMasterKeys() //step 5
+                                     
+                                    masterPins2.append(someKeyGenerator1.getMasterPins2())
+                                    masterKey1.append(someKeyGenerator1.getMasterKey())
+                                    changeKey1.append(someKeyGenerator1.getChangeKeys())
+                                    changePins1.append(someKeyGenerator1.getChangePins())
+                                    masterPins1.append(someKeyGenerator1.getMasterPins1())
                                     
+                                    let subMasterKeys = someKeyGenerator1.getSubMasterKeys()
+                                    //each sub masterkey will have its own change keys
+                            outerLoop: for i in 0..<someKeyGenerator1.getNumSubMasterKeys() {
+                                        var subMKSystem = keyGenerator(keyway: keywayVariable, numChangeKeys: numChangesKeysForEachSubMKs[i], masterKeyLevel: 2,
+                                             numSubMasterKeys: 0 /*sub MKs dont have subMKs so hardcoded this 0*/,
+                                             hasHigherLevelMK: true /*hardcode this to true*/,
+                                             GMKSystem: someKeyGenerator1 /*pass in the keyGenerator instance*/)
+                                         
+                                        subMKSystem.setMasterKey(masterKey: subMasterKeys[i])
+
+                                        areCKGenerated = subMKSystem.generateChangeKeys()
                                     
-                
-                                    masterPins2.append(subMKSystem.getMasterPins2())
-                                    masterKey1.append(subMKSystem.getMasterKey())
-                                    changeKey1.append(subMKSystem.getChangeKeys())
-                                    changePins1.append(subMKSystem.getChangePins())
-                                    masterPins1.append(subMKSystem.getMasterPins1())
+                                        if(areCKGenerated == true) {
+                                            subMKSystem.generateChangePins()
+                                            subMKSystem.generateMasterPins()
+                                             
+                                            let tempCKs = subMKSystem.getChangeKeys()
+
+                                            for j in 0..<subMKSystem.getChangeKeys().count {
+                                                someKeyGenerator1.appendToAllKeys(newKey: tempCKs[j])
+                                            }
+                        
+                                            masterPins2.append(subMKSystem.getMasterPins2())
+                                            masterKey1.append(subMKSystem.getMasterKey())
+                                            changeKey1.append(subMKSystem.getChangeKeys())
+                                            changePins1.append(subMKSystem.getChangePins())
+                                            masterPins1.append(subMKSystem.getMasterPins1())
+                                        }
+                                        else {
+                                            print("subMK CKs not generated. break out of loop")
+                                            break outerLoop
+                                        }
+                                    }
+                                    
+                                    if(areCKGenerated == false) {
+                                        errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job andd try to generate again."
+                                        flagE = true
+                                    }
+                                    else {
+                                        numberSMK = someKeyGenerator1.getSubMasterKeys()
+                                    }
                                 }
-                                numberSMK = someKeyGenerator1.getSubMasterKeys()
+                                else {
+                                    errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
+                                    flagE = true
+                                }
                             }
                             else
                             {
@@ -447,17 +473,23 @@ struct createJob: View {
                                 masterPins2.removeAll()
                                 masterKey1.removeAll()
                                 masterPins1.removeAll()
-                                
-                                someKeyGenerator1.generateChangeKeys()
-                                changeKey1.append(someKeyGenerator1.getChangeKeys())
 
-                                someKeyGenerator1.generateChangePins()
-                                changePins1.append(someKeyGenerator1.getChangePins())
+                                someKeyGenerator1.generateChangeKeys()
+
+                                if((Int(numChangeKeysText) ?? 1) < 500) {
+                                    changeKey1.append(someKeyGenerator1.getChangeKeys())
+                                    someKeyGenerator1.generateChangePins()
+                                    changePins1.append(someKeyGenerator1.getChangePins())
+                                }
+                                else {
+                                    errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
+                                    flagE = true
+                                }
                             }
                             viewNum = 4
                             numberOfLocksCombos = someKeyGenerator1.getAllKeys().count
                         })
-                        .frame(width: 250, height: 35, alignment: .center)
+                        .frame(width: 300, height: 35, alignment: .center)
                         .background(Color.blue)
                         .cornerRadius(8)
                         .foregroundColor(Color.white)
@@ -521,7 +553,7 @@ struct createJob: View {
                         Button("Clear", action: {
                             cancelFlag = true
                         })
-                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Cancel?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
+                            .alert(isPresented: $cancelFlag) {Alert(title: Text("Clear?"), message: Text("Do you want to delete the job information?"), primaryButton: .default(Text("Yes"), action: {
                                 keywayVariable = ""
                                 kwiksetFlag = false
                                 schlageFlag = false
@@ -645,6 +677,7 @@ class keyGenerator {
     private var allKeys = [String]()
     private var GMK:String
     private var GMKAllKeys = [String]()
+    private var numCKForEachSubMK = [Int]()
 
     /*constructor: generate change keys w/ a master key*/
     init(keyway:String, numChangeKeys:Int, masterKeyLevel:Int, numSubMasterKeys: Int = 0) {
@@ -655,12 +688,13 @@ class keyGenerator {
         self.numSubMasterKeys = numSubMasterKeys
         changeKeys = [String](repeating: "", count: numChangeKeys)
         changePins = [String](repeating: "", count: numChangeKeys)
-        masterPins1 = [String](repeating: "", count: numChangeKeys) //JIRA
+        masterPins1 = [String](repeating: "", count: numChangeKeys)
         masterPins2 = [String](repeating: "", count: numChangeKeys)
         subMasterKeys = [String](repeating: "", count: numSubMasterKeys)
         hasHigherLevelMK = false
         GMK = ""
         GMKAllKeys = [""]
+        numCKForEachSubMK = [Int](repeating: 0, count: numSubMasterKeys)
     }
 
 /*second constructor: for sub master keys*/
@@ -678,6 +712,7 @@ class keyGenerator {
         subMasterKeys = [String](repeating: "", count: numSubMasterKeys)
         GMK = GMKSystem.getMasterKey()
         GMKAllKeys = GMKSystem.getAllKeys()
+        numCKForEachSubMK = [Int](repeating: 0, count:numSubMasterKeys)
     }
     func setMasterKey(masterKey:String) {
         if((masterKey.count == combinationLength) && (checkMACSValue(key: masterKey))) {
@@ -707,6 +742,10 @@ class keyGenerator {
     
     func setNumChangeKeys(numChangeKeys:Int) {
         self.numChangeKeys = numChangeKeys
+    }
+
+    func setNumCKsForEachSubMKs(numCKsForEachSubMks:[Int]) {
+        self.numCKForEachSubMK = numCKsForEachSubMks
     }
 
     func getNumSubMasterKeys() -> Int {
@@ -1002,7 +1041,7 @@ class keyGenerator {
     }
     
     /*generate the number of change keys requested*/
-    func generateChangeKeys() {
+    func generateChangeKeys() -> Bool {
         var randomCK:Int = 0
         var changeKey:String
         var viableKey:Bool
@@ -1010,14 +1049,27 @@ class keyGenerator {
         if(masterKey.isEmpty == false) {
             var allViableKeys = [String]()
             for numVaries in (1...3) {
-                let tempViableKeys = viableKeys(numVaries: numVaries)
+                let viableKeys = viableKeys(numVaries: numVaries)
+                var tempViableKeys = viableKeys
+
+                if(hasHigherLevelMK == true) {
+                    var currViableKey = 0
+                    while(currViableKey < tempViableKeys.count) {
+                        if(GMKAllKeys.contains(String(tempViableKeys[currViableKey]))) {
+                            tempViableKeys.remove(at: currViableKey)
+                        }
+                        else {
+                            currViableKey += 1
+                        }
+                    }
+                }
+
                 if(numChangeKeys <= tempViableKeys.count) {
-                    allViableKeys = tempViableKeys
+                    allViableKeys = viableKeys
                     break
                 }
                 else if(numVaries == 3) {
-                    print("Not possible to generate this many keys with this master key.")
-                    return
+                    return false
                 }
             }
             
@@ -1059,6 +1111,7 @@ class keyGenerator {
             }
         }
         allKeys.append(contentsOf: changeKeys)
+        return true
     }
     
     /*generates the subMasterKeys*/

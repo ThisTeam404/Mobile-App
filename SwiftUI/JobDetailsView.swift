@@ -19,7 +19,7 @@ struct JobDetailsView: View {
     var body: some View {
         
         VStack(alignment: .center){
-            
+        ScrollView{
             VStack{
             
                 Text("Job Details")
@@ -40,7 +40,7 @@ struct JobDetailsView: View {
                     .offset(y: 5)
                 
                 
-            }.offset(y:85)
+            }.offset(y:75)
             
             Spacer()
             
@@ -70,9 +70,9 @@ struct JobDetailsView: View {
                     .cornerRadius(15)
                     .offset(y:15)
             }
-            .offset(y:25)
+            .offset(y:85)
             Spacer()
-            
+        }
         }.background(Image("Background")
             .resizable()
             .scaledToFill()
