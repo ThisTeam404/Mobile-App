@@ -52,7 +52,7 @@ struct LoginView: View {
                     .foregroundColor(.blue)
                     .background(.white)
                     .cornerRadius(20)
-                    .offset(x: 0, y: 30)
+                    .offset(x: 0, y: 35)
             }
         }
     }
