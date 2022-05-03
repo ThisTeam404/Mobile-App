@@ -57,6 +57,7 @@ struct AddLockView: View{
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                
             }.frame(width:350)
                 .background(Image("Background")
                     .scaledToFill()
@@ -74,6 +75,7 @@ struct AddLockView: View{
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                
             }.frame(width:350)
             
             
@@ -90,12 +92,12 @@ struct AddLockView: View{
                             .padding()
                             .background(.black.opacity(0.1))
                             .border(.blue.opacity(0.8))
-                            
                         
                         TextField("Unit ", text: $textUnit)
                             .padding()
                             .background(.black.opacity(0.1))
                             .border(.blue.opacity(0.8))
+                        
                     }.frame(width:350)
                             
 
@@ -167,6 +169,7 @@ struct AddLockView: View{
         numKeys=numKeys+1
         let num = "\(numKeys)"
         details.numkeys = num
+        
         textUnit=""
         textBitting=""
         textKeyway=""
@@ -194,6 +197,10 @@ struct AddLockView: View{
             print(lock.unitNum)
             print(lock.mPins)
         }
+        
+        textKeyway = ""
+        textBitting = ""
+        textUnit = ""
         print("CLEARED")
     }
 }
