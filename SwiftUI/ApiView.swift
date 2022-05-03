@@ -40,7 +40,7 @@ struct ApiView: View {
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .cornerRadius(15)
-         
+                
                 Spacer()
             }.offset(y:10)
         }
@@ -49,12 +49,12 @@ struct ApiView: View {
     func sendApiKey(){
         setApi.enterApiKey = apiKey
         print("\(setApi.enterApiKey) entered")
-        //apiKey = ""
+        apiKey = " "
               
     }
     
 }
-/* 
+/*
 struct ApiView_Previews: PreviewProvider {
     static var previews: some View {
         ApiView()
