@@ -1,4 +1,4 @@
-# Project Ttitle
+# Project Title
 LockThatDown - Mobile Component
 
 # Project Description
