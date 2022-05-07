@@ -14,4 +14,11 @@ that holds the website codes.
 
 # Installation Guide
 
-TBA
+Install XCode on a MacOS environment
+Clone this code repository to any location on the system
+Begin a new app project in XCode
+Choose any project name and choose a team if you would like to deploy in the future
+In a file explorer replace files created for this new app with files cloned from this repo
+In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo
+Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro)
+
