@@ -4,6 +4,7 @@
 //
 //  Created by Saba Taghibeik and Anthony Herrera on 4/24/22.
 //
+
 import SwiftUI
 
 
@@ -103,6 +104,7 @@ struct createJob: View {
                                 .background(.blue)
                                 .cornerRadius(8)
                                 .disabled(schlageFlag)
+                                .accessibilityIdentifier("SC1T")
                         }
                         else
                         {
@@ -113,6 +115,7 @@ struct createJob: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .border(Color.blue, width: 2)
+                                .accessibilityIdentifier("SC1F")
                             
                         }
                     
@@ -130,6 +133,7 @@ struct createJob: View {
                                 .background(.blue)
                                 .cornerRadius(8)
                                 .disabled(kwiksetFlag)
+                                .accessibilityIdentifier("KW1T")
                         }
                         else
                         {
@@ -140,6 +144,7 @@ struct createJob: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .border(Color.blue, width: 2)
+                                .accessibilityIdentifier("KW1F")
                             
                         }
                         Spacer()
@@ -167,6 +172,7 @@ struct createJob: View {
                                 .background(.blue)
                                 .cornerRadius(8)
                                 .disabled(num1 && num2)
+                                .accessibilityIdentifier("ZeroT")
                         }
                         else
                         {
@@ -177,6 +183,7 @@ struct createJob: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .border(Color.blue, width: 2)
+                                .accessibilityIdentifier("ZeroF")
                         }
                     
                         Spacer()
@@ -197,6 +204,7 @@ struct createJob: View {
                                 .foregroundColor(.white)
                                 .background(.blue)
                                 .cornerRadius(8)
+                                .accessibilityIdentifier("OneT")
                         }
                         else
                         {
@@ -207,7 +215,7 @@ struct createJob: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .border(Color.blue, width: 2)
-                            
+                                .accessibilityIdentifier("OneF")
                         }
                         Spacer()
                         if(!num2)
@@ -225,6 +233,7 @@ struct createJob: View {
                                 .foregroundColor(.white)
                                 .background(.blue)
                                 .cornerRadius(8)
+                                .accessibilityIdentifier("TwoT")
                         }
                         else
                         {
@@ -235,7 +244,7 @@ struct createJob: View {
                                 .background(.white)
                                 .cornerRadius(8)
                                 .border(Color.blue, width: 2)
-                            
+                                .accessibilityIdentifier("TwoF")
                         }
                         Spacer()
                     }//Component 2 End
@@ -245,6 +254,7 @@ struct createJob: View {
                         .frame(width: 300)
                         .border(.blue)
                         .background(.white)
+                        .accessibilityIdentifier("NCK")
                     //Component 3 End
                     if(masterKeyLevelValue == "2") //Component 4 Start
                     {
@@ -253,6 +263,7 @@ struct createJob: View {
                             .frame(width: 300)
                             .background(.white)
                             .border(.blue)
+                            .accessibilityIdentifier("NSMK")
                         HStack{ //Start of Hstack
                             if(!addComboflag)
                             {
@@ -281,6 +292,7 @@ struct createJob: View {
                                     .background(Color.blue)
                                     .cornerRadius(8)
                                     .foregroundColor(Color.white)
+                                    .accessibilityIdentifier("ACT")
                                     .alert(isPresented: $flagE) {Alert(title: Text("Error Message"), message: Text(errorMessage), dismissButton: .default(Text("OK")))}
                             }
                             else
@@ -292,6 +304,7 @@ struct createJob: View {
                                     .cornerRadius(8)
                                     .foregroundColor(Color.blue)
                                     .border(Color.blue, width: 2)
+                                    .accessibilityIdentifier("ACF")
                             }
                         } //End of HStack
                         ForEach(0..<numSubmasterKeys.count, id: \.self) {index in
@@ -301,7 +314,7 @@ struct createJob: View {
                                .frame(width: 300, height: 50)
                                .border(.blue)
                                .background(/*.black.opacity(0.1)*/ .white)
-                           
+                               .accessibilityIdentifier("NKSMK")
                         }
                     }//Component 4 End
                     if(kwiksetFlag || schlageFlag)//Component 5 Start
@@ -405,7 +418,6 @@ struct createJob: View {
                                 
                                 var areCKGenerated:Bool
                                 areCKGenerated = someKeyGenerator1.generateChangeKeys() //step 2 (3)
-
                                 if(areCKGenerated == true) {
                                     someKeyGenerator1.generateChangePins() //step 3 (4)
                                      
@@ -494,6 +506,7 @@ struct createJob: View {
                         .cornerRadius(8)
                         .foregroundColor(Color.white)
                         .disabled(keyWayFlag)
+                        .accessibilityIdentifier("GenerateT")
                         .alert(isPresented: $flagE) {Alert(title: Text("Error Message"), message: Text(errorMessage), dismissButton: .default(Text("OK")))}
                     }
                     else{
@@ -504,6 +517,7 @@ struct createJob: View {
                             .foregroundColor(Color.blue)
                             .disabled(keyWayFlag)
                             .border(Color.blue, width: 2)
+                            .accessibilityIdentifier("GenerateF")
                     }//Component 5 End
                     HStack{//Component 6 Start
                         Spacer()
@@ -536,6 +550,7 @@ struct createJob: View {
                             .background(.blue)
                             .cornerRadius(8)
                             .border(Color.blue, width: 2)
+                            .accessibilityIdentifier("ConfirmT")
                         }
                         else
                         {
@@ -546,6 +561,7 @@ struct createJob: View {
                                 .disabled(confirmFlag2)
                                 .border(Color.blue, width: 2)
                                 .cornerRadius(8)
+                                .accessibilityIdentifier("ConfirmF")
                         }
           
                         Spacer()
@@ -581,6 +597,7 @@ struct createJob: View {
                             .foregroundColor(.white)
                             .background(.blue)
                             .cornerRadius(8)
+                            .accessibilityIdentifier("Clear")
                         Spacer()
                     }//Component 6 End
                 }.padding()//End of ScrollView
@@ -1261,14 +1278,14 @@ struct numComboRow: View{
     var body: some View{
         HStack{
             Text(numKeys)
-            Text(combo).foregroundColor(Color.red)
-            Text(comboPins).foregroundColor(Color.green)
+            Text(combo).foregroundColor(Color.red).accessibilityIdentifier("Red")
+            Text(comboPins).foregroundColor(Color.green).accessibilityIdentifier("Green")
             Text(keyWay)
             Text(hasMKValue)
             Text(mKeyLevel)
-            Text(masterKey).foregroundColor(Color.blue)
-            Text(masterPins1).foregroundColor(Color.orange)
-            Text(masterPins2).foregroundColor(Color.brown)
+            Text(masterKey).foregroundColor(Color.blue).accessibilityIdentifier("Blue")
+            Text(masterPins1).foregroundColor(Color.orange).accessibilityIdentifier("Orange")
+            Text(masterPins2).foregroundColor(Color.brown).accessibilityIdentifier("Brown")
             Text(subMasterKey)
         }
     }

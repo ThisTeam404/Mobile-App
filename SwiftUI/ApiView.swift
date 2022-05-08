@@ -4,7 +4,6 @@
 //
 //  Created by Matthew Murata and Kaily Estepa on 3/22/22.
 //
-
 import SwiftUI
 
 class setApiKey: ObservableObject{
@@ -32,6 +31,7 @@ struct ApiView: View {
                     .padding()
                     .border(.blue)
                     .background(.black.opacity(0.1))
+                    .accessibilityIdentifier("APIKey")
                 
                 //assign
                 Button("Send", action:{
@@ -40,6 +40,7 @@ struct ApiView: View {
                     .background(Color.blue)
                     .foregroundColor(Color.white)
                     .cornerRadius(15)
+                    .accessibilityIdentifier("Send")
                 
                 Spacer()
             }.offset(y:10)

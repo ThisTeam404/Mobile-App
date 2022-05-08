@@ -53,6 +53,7 @@ struct LoginView: View {
                     .background(.white)
                     .cornerRadius(20)
                     .offset(x: 0, y: 35)
+                    .accessibilityIdentifier("GoogleSignIn")
             }
         }
     }
@@ -65,5 +66,3 @@ struct LoginView_Previews: PreviewProvider {
         LoginView()
     }
 }
-
-

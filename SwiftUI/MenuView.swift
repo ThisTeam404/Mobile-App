@@ -57,6 +57,7 @@ struct MenuView: View {
                         .background(Color.blue)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("API")
                 })
                 
                 
@@ -67,6 +68,7 @@ struct MenuView: View {
                                 .background(Color.blue)
                                 .foregroundColor(Color.white)
                                 .cornerRadius(15)
+                                .accessibilityIdentifier("JobDetails")
                 })
                     
                 NavigationLink(destination: createJob(viewModel: createJobDetails), label: {
@@ -76,6 +78,7 @@ struct MenuView: View {
                         .background(Color.blue)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("CreateJob")
                 })
                 
                 NavigationLink(destination: AddLockView(viewModel: addLockDetails, details: details), label: {
@@ -85,6 +88,7 @@ struct MenuView: View {
                         .background(Color.blue)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("AddLock")
                 })
 
                 
@@ -95,6 +99,7 @@ struct MenuView: View {
                         .background(Color.blue)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("SaveInfo")
                 })
                 
                 Spacer()
@@ -103,6 +108,7 @@ struct MenuView: View {
                     signOutOption.signOut()
                 })
                     .foregroundColor(.black)
+                    .accessibilityIdentifier("SignOut")
                 
             }.navigationBarTitle("MENU")
                 .navigationBarTitleDisplayMode(.inline)
