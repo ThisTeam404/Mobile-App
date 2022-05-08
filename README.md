@@ -1,5 +1,4 @@
-# Project Title
-LockThatDown - Mobile Component
+# LockThatDown - Mobile Component
 
 # Project Description
 The goal of this project is to have an app that generates key pins for door locks.
@@ -14,11 +13,11 @@ that holds the website codes.
 
 # Installation Guide
 
-Install XCode on a MacOS environment
-Clone this code repository to any location on the system
-Begin a new app project in XCode
-Choose any project name and choose a team if you would like to deploy in the future
-In a file explorer replace files created for this new app with files cloned from this repo
-In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo
-Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro)
+Install XCode on a MacOS environment </br>
+Clone this code repository to any location on the system </br>
+Begin a new app project in XCode </br>
+Choose any project name and choose a team if you would like to deploy in the future </br>
+In a file explorer replace files created for this new app with files cloned from this repo </br>
+In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
+Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
