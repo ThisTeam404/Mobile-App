@@ -1,4 +1,5 @@
 # LockThatDown - Mobile Component
+<img width="400" height="400" src="https://github.com/ThisTeam404/WebPart/blob/main/client/src/OfficialLogo.PNG" />
 
 ## Project Structure
 This project is custom software made for The Smiling Locksmith®.
@@ -28,3 +29,11 @@ In a file explorer replace files created for this new app with files cloned from
 In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
 Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
+## Devlopers
+Anthony Herrera</br>
+Milford Gover</br>
+Matthew Murata</br>
+Kaily Estepa</br>
+Sia Xiong</br>
+Justin Moua</br>
+Saba Taghibeik</br>
