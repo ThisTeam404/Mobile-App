@@ -14,7 +14,7 @@ The goal of this project is to have an app that generates key pins for door lock
 This app will be used by a locksmith who currently has to manually come up with
 different key pins each time he works on a job.
 
-This respository is for the iphone app that will generate key pins for the door locks.
+This respository is for the iPhone app that will generate key pins for the door locks.
 Each time the locksmith works on a lock he'll generate the key pins on the iphone and 
 save it on our database. He can retrieve the key pins in the future by looking it up 
 from the database using the website interface.
@@ -29,7 +29,7 @@ In a file explorer replace files created for this new app with files cloned from
 In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
 Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
-## Devlopers
+## Developers
 Anthony Herrera</br>
 Milford Gover</br>
 Matthew Murata</br>
