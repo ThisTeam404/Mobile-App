@@ -109,6 +109,7 @@ struct SaveView: View {
                         .background(Color.white)
                         .foregroundColor(Color.black)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("LoadData")
                 }
                 else{
                     ScrollView(showsIndicators: false){
@@ -117,10 +118,10 @@ struct SaveView: View {
                             Text("Job Information")
                                 .bold()
                             
-                            Text("Cost: \(finalInfo.finalArray.job.cost)")
-                            Text("Address: \(finalInfo.finalArray.job.address)")
-                            Text("Notes: \(finalInfo.finalArray.job.notes)")
-                            Text("Num Keys: \(finalInfo.finalArray.job.numkeys)")
+                            Text("Cost: \(finalInfo.finalArray.job.cost)").accessibilityIdentifier("finalInfoCost")
+                            Text("Address: \(finalInfo.finalArray.job.address)").accessibilityIdentifier("finalInfoAddress")
+                            Text("Notes: \(finalInfo.finalArray.job.notes)").accessibilityIdentifier("finalInfoNotes")
+                            Text("Num Keys: \(finalInfo.finalArray.job.numkeys)").accessibilityIdentifier("finalInfoNumKeys")
                             
                             Text("")
                             Text("Keys")
@@ -128,15 +129,15 @@ struct SaveView: View {
                             
                             ForEach(finalInfo.finalArray.keys){ keyInfo in
                                 Text("")
-                                Text("KeyWay: \(keyInfo.keyway)")
-                                Text("Combination: \(keyInfo.combination)")
-                                Text("Unit: \(keyInfo.unit)")
-                                Text("Key Level: \(keyInfo.keyLevelType)")
-                                Text("Has MK: \(String(keyInfo.hasMK))")
-                                Text("Bottom Pins: \(keyInfo.bottomPins)")
-                                Text("Master Key Combo:\(keyInfo.MKCombination)")
-                                Text("Master Pins1: \(keyInfo.masterPins1)")
-                                Text("Master Pins2: \(keyInfo.masterPins2)")}
+                                Text("KeyWay: \(keyInfo.keyway)").accessibilityIdentifier("finalInfoKeyway")
+                                Text("Combination: \(keyInfo.combination)").accessibilityIdentifier("finalInfoComboination")
+                                Text("Unit: \(keyInfo.unit)").accessibilityIdentifier("finalInfoUnit")
+                                Text("Key Level: \(keyInfo.keyLevelType)").accessibilityIdentifier("finalInfoKeyLevelType")
+                                Text("Has MK: \(String(keyInfo.hasMK))").accessibilityIdentifier("finalInfoHasMK")
+                                Text("Bottom Pins: \(keyInfo.bottomPins)").accessibilityIdentifier("finalInfoBottomPins")
+                                Text("Master Key Combo:\(keyInfo.MKCombination)").accessibilityIdentifier("finalInfoMKCombination")
+                                Text("Master Pins1: \(keyInfo.masterPins1)").accessibilityIdentifier("finalInfoMasterPins1")
+                                Text("Master Pins2: \(keyInfo.masterPins2)").accessibilityIdentifier("finalInfoMasterPins2")}
                         }
                     }.offset(x: -30, y:15)
                     
@@ -152,6 +153,7 @@ struct SaveView: View {
                         .background(Color.blue)
                         .foregroundColor(Color.white)
                         .cornerRadius(15)
+                        .accessibilityIdentifier("Save2")
                        
                        Button("Cancel", action:{
                            ifCancel = true
@@ -176,7 +178,7 @@ struct SaveView: View {
                            .foregroundColor(.white)
                            .background(.blue)
                            .cornerRadius(15)
-                        
+                           .accessibilityIdentifier("Cancel")
                     }
                 }
             }

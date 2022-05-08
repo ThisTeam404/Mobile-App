@@ -31,6 +31,7 @@ struct JobDetailsView: View {
                     .frame(width: 350)
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                    .accessibilityIdentifier("Cost")
                 
                 TextField("Address ", text: $textAddress)
                     .padding()
@@ -38,7 +39,7 @@ struct JobDetailsView: View {
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
                     .offset(y: 5)
-                
+                    .accessibilityIdentifier("Address")
                 
             }.offset(y:75)
             
@@ -54,6 +55,7 @@ struct JobDetailsView: View {
                     TextEditor(text: $textNotes)
                         .border(.blue)
                         .frame(width: 350, height: 385)
+                        .accessibilityIdentifier("Notes")
                     
                     Text("Job Notes")
                         .opacity(0)
@@ -69,6 +71,7 @@ struct JobDetailsView: View {
                     .background(.blue)
                     .cornerRadius(15)
                     .offset(y:15)
+                    .accessibilityIdentifier("Save")
             }
             .offset(y:85)
             Spacer()

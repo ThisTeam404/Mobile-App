@@ -52,11 +52,13 @@ struct AddLockView: View{
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                    .accessibilityIdentifier("Cost2")
                 
                 TextField("Address", text: $textAddress)
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                    .accessibilityIdentifier("Address2")
                 
             }.frame(width:350)
                 .background(Image("Background")
@@ -70,11 +72,13 @@ struct AddLockView: View{
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                    .accessibilityIdentifier("MP")
                 
                 TextField("Comment", text: $textComment)
                     .padding()
                     .background(.black.opacity(0.1))
                     .border(.blue.opacity(0.8))
+                    .accessibilityIdentifier("Comment")
                 
             }.frame(width:350)
             
@@ -86,17 +90,20 @@ struct AddLockView: View{
                         .background(.black.opacity(0.1))
                         .frame(width:350)
                         .border(.blue.opacity(0.8))
+                        .accessibilityIdentifier("Bitting")
                     
                     HStack{
                         TextField("Keyway ", text: $textKeyway)
                             .padding()
                             .background(.black.opacity(0.1))
                             .border(.blue.opacity(0.8))
+                            .accessibilityIdentifier("Keyway")
                         
                         TextField("Unit ", text: $textUnit)
                             .padding()
                             .background(.black.opacity(0.1))
                             .border(.blue.opacity(0.8))
+                            .accessibilityIdentifier("Unit")
                         
                     }.frame(width:350)
                             
@@ -112,6 +119,7 @@ struct AddLockView: View{
                                 .background(.blue)
                                 .cornerRadius(15)
                                 .foregroundColor(.white)
+                                .accessibilityIdentifier("Add")
                         })
                         
 
@@ -124,6 +132,7 @@ struct AddLockView: View{
                                 .background(.blue)
                                 .cornerRadius(15)
                                 .foregroundColor(.white)
+                                .accessibilityIdentifier("New")
                         })
                     }
                         
@@ -213,10 +222,10 @@ struct LockRow: View{
     
     var body: some View{
         HStack{
-            Text(bitting)
-            Text(keyWay)
-            Text(unitNum)
-            Text(mPins)
+            Text(bitting).accessibilityIdentifier("bitting")
+            Text(keyWay).accessibilityIdentifier("keyWay")
+            Text(unitNum).accessibilityIdentifier("unitNum")
+            Text(mPins).accessibilityIdentifier("mPins")
         }
     }
 }
@@ -226,5 +235,3 @@ struct AddLockView_Previews: PreviewProvider {
         AddLockView()
     }
 }
-
-
