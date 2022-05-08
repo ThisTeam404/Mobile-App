@@ -8,7 +8,7 @@ different key pins each time he works on a job.
 This respository is for the iphone app that will generate key pins for the door locks.
 Each time the locksmith works on a lock he'll generate the key pins on the iphone and 
 save it on our database. He can retrieve the key pins in the future by looking it up 
-from the database using the website interface.There is another respository (https://github.com/ThisTeam404/WebPart)
+from the database using the website interface. There is another respository (https://github.com/ThisTeam404/WebPart)
 that holds the website codes. 
 
 # Installation Guide
