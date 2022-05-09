@@ -279,6 +279,13 @@ struct createJob: View {
                                         errorMessage = "The number entered in change keys sub master is below one. Please enter a positive integer number."
                                         flagE = true
                                         return}
+                                    
+                                    guard Int(nSubMK)! < 100 else {
+                                        nSubMK = ""
+                                        errorMessage = "The number entered in sub master is too big. Please enter a lower number."
+                                        flagE = true
+                                    return}
+                                    
                                     for _ in 1...(Int(nSubMK) ?? 1)
                                     {
                                         self.numSubmasterKeys.append("")
@@ -486,9 +493,8 @@ struct createJob: View {
                                 masterKey1.removeAll()
                                 masterPins1.removeAll()
 
-                                someKeyGenerator1.generateChangeKeys()
-
                                 if((Int(numChangeKeysText) ?? 1) < 500) {
+                                    someKeyGenerator1.generateChangeKeys()
                                     changeKey1.append(someKeyGenerator1.getChangeKeys())
                                     someKeyGenerator1.generateChangePins()
                                     changePins1.append(someKeyGenerator1.getChangePins())
