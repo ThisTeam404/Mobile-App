@@ -21,25 +21,37 @@ from the database using the website interface.
 
 # Installation Guide
 
-Install XCode on a MacOS environment from the App Store </br>
-Clone this code repository to any location on the system </br>
-One way to clone the repository is using Github Desktop </br>
-After installing GitHub Desktop and going to the the main page, go to the upper right and press Current Repository </br>
-Press Add, then press Clone Repository. Go to URL </br>
-Type the URL (the URL is from Code -> HTTPS. Copy the URL) in the "URL or username/repository" textfield </br>
-Press clone </br>
-Begin a new app project in XCode </br>
-Choose any project name and choose a team if you would like to deploy in the future </br>
-In a file explorer replace files created for this new app with files cloned from this repo </br>
-In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
-Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In depedencies for login authentication </br>
-Those packages can be found at: </br>
-  Firebase -- https://github.com/firebase/firebase-ios-sdk </br>
-  GoogleSignIn iOS --  https://github.com/google/GoogleSignIn-iOS </br>
-When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
+Step 1) Install XCode on a MacOS environment from the App Store </br>
+
+Step 2) Clone this code repository to any location on the system </br>
+
+Step 3) One way to clone the repository is using Github Desktop </br>
+  * After installing GitHub Desktop and going to the the main page, go to the upper right and press Current Repository </br>
+          
+  * Press Add, then press Clone Repository. Go to URL </br>
+          
+  * Type the URL (the URL is from Code -> HTTPS. Copy the URL) in the "URL or username/repository" textfield </br>
+          
+  * Press clone </br>
+  
+Step 4) Begin a new app project in XCode </br>
+
+Step 5) Choose any project name and choose a team if you would like to deploy in the future </br>
+
+Step 6) In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
+
+Step 7) Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In depedencies for login authentication </br>
+  Those packages can be found at: </br>
+  * Firebase -- https://github.com/firebase/firebase-ios-sdk </br>
+    
+  * GoogleSignIn iOS --  https://github.com/google/GoogleSignIn-iOS </br>
+
+Note: When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
  you will need a GoogleService-Info.plist that will be added to your files. </br>
+
 The reversed client id will go under URL types in your XCode project. </br>
-Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
+
+Step 8) Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
 ## Developers
 Anthony Herrera</br>
