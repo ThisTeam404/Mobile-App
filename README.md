@@ -21,8 +21,13 @@ from the database using the website interface.
 
 # Installation Guide
 
-Install XCode on a MacOS environment </br>
+Install XCode on a MacOS environment from the App Store </br>
 Clone this code repository to any location on the system </br>
+One way to clone the repository is using Github Desktop </br>
+After installing GitHub Desktop and going to the the main page, go to the upper right and press Current Repository </br>
+Press Add, then press Clone Repository. Go to URL </br>
+Type the URL (the URL is from Code -> HTTPS. Copy the URL) in the "URL or username/repository" textfield </br>
+Press clone </br>
 Begin a new app project in XCode </br>
 Choose any project name and choose a team if you would like to deploy in the future </br>
 In a file explorer replace files created for this new app with files cloned from this repo </br>
