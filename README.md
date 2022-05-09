@@ -21,7 +21,7 @@ from the database using the website interface.
 
 # Installation Guide
 
-Step 1) Install Xcode on a macOS environment from the App Store </br>
+Step 1) Install Xcode (version 13.3.1 or later) on a macOS environment from the App Store </br>
 
 Step 2) Clone this code repository to any location on the system </br>
 
@@ -40,17 +40,23 @@ Step 5) Choose any project name and choose a team if you would like to deploy in
 
 Step 6) In Xcode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
 
-Step 7) Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In dependencies for login authentication </br>
+Step 7) Using Swift Package Manager, add Firebase Authentication SDK and Google Sign In SDK for user authentication </br>
   Those packages can be found at: </br>
   * Firebase -- https://github.com/firebase/firebase-ios-sdk </br>
     
   * GoogleSignIn iOS --  https://github.com/google/GoogleSignIn-iOS </br>
 
-Note: When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
- you will need a GoogleService-Info.plist that will be added to your files. </br>
-
+Note: Prerequisites to adding Firebase to our project: </br>
+ - Xcode 13.3.1 or later </br>
+ - iOS 10 or later </br>
+ 
+When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
+The bundle identifier of your Xcode project must be the same as the Apple bundle ID that shows on your Firebase project.</br>
+When adding Firebase to your app, after you register your app, you will download the GoogleService-Info.plist and add it to your Xcode project files. </br>
+This is needed to configure the identity provider we use -- Google Sign-In. </br>
+On the Firebase console, go to the Authentication tab to enable the Google Sign-In method. </br>
 The GoogleService-Info.plist file will contain a reversed client id, it is our client id that connects to the project and identifies itself to the authentication backend. </br>
-In other words, it allows Google Sign-In to be set up. It must be copied and pasted under Info -> URL types -> URL Schemes in your Xcode project. </br>
+It allows Firebase Auth to work properly with Google Sign-In. It must be copied and pasted under Info -> URL types -> URL Schemes in your Xcode project. </br>
 
 Step 8) Choose the run icon on the top left of Xcode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
