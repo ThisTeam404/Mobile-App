@@ -371,6 +371,7 @@ struct createJob: View {
                                      masterPins1.append(someKeyGenerator1.getMasterPins1())
                                  }
                                  else {
+                                     confirmFlag2 = false
                                      errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
                                      flagE = true
                                  }
@@ -472,6 +473,7 @@ struct createJob: View {
                                     }
                                     
                                     if(areCKGenerated == false) {
+                                        confirmFlag2 = false
                                         errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job andd try to generate again."
                                         flagE = true
                                     }
@@ -480,6 +482,7 @@ struct createJob: View {
                                     }
                                 }
                                 else {
+                                    confirmFlag2 = false
                                     errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
                                     flagE = true
                                 }
@@ -500,6 +503,7 @@ struct createJob: View {
                                     changePins1.append(someKeyGenerator1.getChangePins())
                                 }
                                 else {
+                                    confirmFlag2 = false
                                     errorMessage = "Not possible to generate this many keys in general (or with specific master key). Cancel job and try to generate again."
                                     flagE = true
                                 }
