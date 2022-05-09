@@ -40,7 +40,7 @@ Step 5) Choose any project name and choose a team if you would like to deploy in
 
 Step 6) In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
 
-Step 7) Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In depedencies for login authentication </br>
+Step 7) Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In dependencies for login authentication </br>
   Those packages can be found at: </br>
   * Firebase -- https://github.com/firebase/firebase-ios-sdk </br>
     
