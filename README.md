@@ -27,6 +27,13 @@ Begin a new app project in XCode </br>
 Choose any project name and choose a team if you would like to deploy in the future </br>
 In a file explorer replace files created for this new app with files cloned from this repo </br>
 In XCode right click the project folder (normally on the left side-bar) and choose "Add New Files". Choose the .swift files cloned from this repo </br>
+Using Swift Package Manager, add Firebase Authentication dependencies and Google Sign In depedencies for login authentication </br>
+Those packages can be found at: </br>
+  Firebase -- https://github.com/firebase/firebase-ios-sdk </br>
+  GoogleSignIn iOS --  https://github.com/google/GoogleSignIn-iOS </br>
+When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
+ you will need a GoogleService-Info.plist that will be added to your files. </br>
+The reversed client id will go under URL types in your XCode project. </br>
 Choose the run icon on the top left of XCode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
 ## Developers
