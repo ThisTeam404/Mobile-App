@@ -49,7 +49,8 @@ Step 7) Using Swift Package Manager, add Firebase Authentication dependencies an
 Note: When using Firebase be sure to build a project and connect it to your iOS project on https://firebase.google.com </br>
  you will need a GoogleService-Info.plist that will be added to your files. </br>
 
-The reversed client id will go under URL types in your Xcode project. </br>
+The GoogleService-Info.plist file will contain a reversed client id, it is our client id that connects to the project and identifies itself to the authentication backend. </br>
+In other words, it allows Google Sign-In to be set up. It must be copied and pasted under Info -> URL types -> URL Schemes in your Xcode project. </br>
 
 Step 8) Choose the run icon on the top left of Xcode. The app should successfully build and run inside your chosen simulated environment (We normally choose iPhone 11 Pro) </br>
 
